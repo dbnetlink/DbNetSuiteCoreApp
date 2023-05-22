@@ -1,0 +1,51 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+
+@model SampleModel
+
+@section Title
+{
+	<p>If you want to inspect the values in the grid after the page loads you can use the @Model.HelpLink("events.htm#OnRowTransform", "OnRowTransform") event which will invoke the client-side method @Model.HelpLink("clientsideapi.htm#columnValue", "columnValue") to identify and compare column cell values. In this demo the row is highlighted if the re-order level is above the stock level.</p>
+}
+
+@section Control
+	{
+	@{
+		DbNetGridCore productsGrid = new DbNetGridCore("northwind", "products");
+		productsGrid.Bind(EventType.OnRowTransform, "highlightOrderLevels");
+		@productsGrid.Render()
+	}
+}
+
+@section Scripts
+{
+<script type="text/javascript" class="source">
+function highlightOrderLevels(sender, args)
+{
+	var unitsInStock = parseInt(sender.columnValue("UnitsInStock",args.row));
+	var reorderLevel = parseInt(sender.columnValue("ReorderLevel",args.row));
+	
+	if (unitsInStock < reorderLevel) {
+		$(args.row).css("backgroundColor", "#F2D7D5").css("color", "#CD6155");
+		$(args.row.cells[sender.columnIndex("UnitsInStock")]).css("backgroundColor", "#CD6155").css("color", "#F2D7D5");
+		$(args.row.cells[sender.columnIndex("ReorderLevel")]).css("backgroundColor", "#CD6155").css("color", "#F2D7D5");
+	}
+}
+</script>
+}
+
+@section Source
+{
+<pre>
+	<code class="language-csharp">
+@@{
+	DbNetGridCore productsGrid = new DbNetGridCore("northwind", "products");
+	productsGrid.Bind(EventType.OnRowTransform, "highlightOrderLevels");
+	@@productsGrid.Render()
+}
+	</code>
+</pre>
+}
+

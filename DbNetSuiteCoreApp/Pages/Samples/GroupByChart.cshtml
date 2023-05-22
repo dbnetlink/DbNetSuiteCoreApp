@@ -1,0 +1,78 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+@using System.Text.Json
+
+@model SampleModel
+
+@section Title
+    {
+    <p>Client-side charting controls such as Google charts can be easily integrated with grid data using the @Model.HelpLink("properties.htm#GoogleChartOptions", "GoogleChartOptions") property</p>
+}
+
+@section Control
+    {
+    @{
+        DbNetGridCore productSalesSummaryGrid = new DbNetGridCore("northwind", "Invoices join Products on Products.ProductID = Invoices.ProductId", "salesGrid");
+        productSalesSummaryGrid.Columns = new List<string>() { "CategoryID", "(Invoices.UnitPrice * Invoices.Quantity) as TotalValue" };
+        productSalesSummaryGrid.Labels = new List<string>() { "Category", "Total Value" };
+        productSalesSummaryGrid.GroupBy = true;
+        productSalesSummaryGrid.ToolbarPosition = ToolbarPosition.Hidden;
+        productSalesSummaryGrid.SetColumnProperty(new String[] { "TotalValue" }, ColumnPropertyType.Format, "c");
+        productSalesSummaryGrid.SetColumnProperty(new String[] { "TotalValue" }, ColumnPropertyType.DataType, nameof(Decimal));
+        productSalesSummaryGrid.SetColumnProperty("TotalValue", ColumnPropertyType.Aggregate, AggregateType.Sum);
+        productSalesSummaryGrid.SetColumnProperty("CategoryID", ColumnPropertyType.Lookup, new Lookup("Categories", "CategoryId", "CategoryName"));
+        productSalesSummaryGrid.GoogleChartOptions = new GoogleChartOptions() { Type = GoogleChartType.PieChart, PanelId = "piechart", FunctionName = "chartOptions" };
+        @productSalesSummaryGrid.Render()
+    }
+}
+
+@section Scripts
+    {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" class="source">
+        function chartOptions(grid, options) {
+            options.is3D = true;
+            options.chartArea = { width: '90%', height: '90%' };
+            options.width = 300;
+            options.height = 250;
+        }
+    </script>
+}
+@section Markup
+{
+    <div class="source">
+        <h6>Sales By Category</h6>
+
+        <table>
+            <tr>
+                <td>
+                    <div id="salesGrid"></div>
+                </td>
+                <td>
+                    <div id="piechart"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+@section Source
+    {
+    <pre>
+    <code class="language-csharp">
+DbNetGridCore productSalesSummaryGrid = new DbNetGridCore("northwind", "Invoices join Products on Products.ProductID = Invoices.ProductId", "salesGrid");
+productSalesSummaryGrid.Columns = new List<string>() { "CategoryID", "(Invoices.UnitPrice * Invoices.Quantity) as TotalValue" };
+productSalesSummaryGrid.Labels = new List<string>() { "Category", "Total Value" };
+productSalesSummaryGrid.GroupBy = true;
+productSalesSummaryGrid.ToolbarPosition = ToolbarPosition.Hidden;
+productSalesSummaryGrid.SetColumnProperty(new String[] { "TotalValue" }, ColumnPropertyType.Format, "c");
+productSalesSummaryGrid.SetColumnProperty(new String[] { "TotalValue" }, ColumnPropertyType.DataType, nameof(Decimal));
+productSalesSummaryGrid.SetColumnProperty("TotalValue", ColumnPropertyType.Aggregate, AggregateType.Sum);
+productSalesSummaryGrid.SetColumnProperty("CategoryID", ColumnPropertyType.Lookup, new Lookup("Categories", "CategoryId", "CategoryName"));
+productSalesSummaryGrid.GoogleChartOptions = new GoogleChartOptions() { Type = GoogleChartType.PieChart, PanelId = "piechart", FunctionName = "chartOptions" };
+@@productSalesSummaryGrid.Render()
+            </code>
+        </pre>
+}

@@ -1,0 +1,42 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+
+@model SampleModel
+
+@section Title
+{
+    <p>By setting the @Model.HelpLink("properties.htm#FrozenHeader", "FrozenHeader") property to true you can keep the heading rows at the top of the screen as you scroll down the grid.</p>
+}
+
+@{
+    DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers")
+    {
+        Columns = new List<string>() { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" },
+        ToolbarPosition = ToolbarPosition.Hidden,
+        FrozenHeader = true
+    };
+    customersGrid.SetColumnProperty(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" },ColumnPropertyType.Filter,true);
+
+    @customersGrid.Render()
+}
+
+@section Source
+{
+<pre>
+    <code class="language-csharp">
+DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers")
+{
+    Columns = new List<string>() { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" },
+    ToolbarPosition = ToolbarPosition.Hidden,
+    FrozenHeader = true
+};
+
+customersGrid.SetColumnProperty(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" },ColumnPropertyType.Filter,true);
+
+@@customersGrid.Render()
+    </code>
+</pre>
+}
+

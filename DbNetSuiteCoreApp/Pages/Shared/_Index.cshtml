@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DbNetSuiteCore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @@media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        div.row {
+            margin-top: 10px;
+        }
+
+        div.logo {
+            border: 3px solid steelblue;
+            border-radius: 5px;
+            font-family: 'Cascadia Code';
+            font-size: 36px;
+            color: steelblue;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            height: 54px;
+            padding-right: 2px;
+            background-color: whitesmoke;
+        }
+
+            div.logo img {
+                margin: auto;
+                vertical-align: middle;
+                display: inline-block;
+                padding-bottom:5px;
+            }
+
+        span.net {
+            color: lightsteelblue;
+        }
+
+        span.core {
+            color: #ccc;
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <div class="logo">
+                        <a href="/"><img src="/images/logo.png" class="logo" style="height:48px;width:48px;" /></a>
+                        <span class="db">Db</span><span class="net">Net</span><span class="db">Suite</span><span class="core">Core</span>
+                    </div>
+                </div>
+                <div class="col-6" style="text-align:right">
+                </div>
+            </div>
+            <hr />
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

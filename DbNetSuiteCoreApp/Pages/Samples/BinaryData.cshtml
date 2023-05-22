@@ -1,0 +1,87 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+@model SampleModel
+
+@section Title {
+    <p>Binary data can be treated in one of two ways in the grid control. If it is an image then be previewed directly in the browser by setting the column @Model.HelpLink("methods.htm#Image", "Image") property to true or if the binary data should be downloaded in the case of files such as spreadsheets or PDF's then you can set the column @Model.HelpLink("methods.htm#Download", "Download") property to true. In both cases the @Model.HelpLink("events.htm#OnCellDataDownload", "OnCellDataDownload") event can be used to the extension (mime type) and image size in the case of an @Model.HelpLink("methods.htm#Image", "Image") or the file name in the case of a @Model.HelpLink("methods.htm#Download", "Download").</p>
+}
+
+@section Markup {
+<div class="source">
+    <h5>Preview binary data</h5>
+    <hr />
+    <div id="imageGrid"></div>
+    <br />
+    <h5>Download binary data</h5>
+    <hr />
+    <div id="downloadGrid"></div>
+</div>
+}
+
+@section Control {
+    @{
+        DbNetGridCore imageGrid = new DbNetGridCore("northwind", "employees", "imageGrid")
+        {
+            Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
+            PageSize = 5
+        };
+        imageGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+        imageGrid.SetColumnProperty("Photo", ColumnPropertyType.Image, true);
+        imageGrid.Bind(EventType.OnCellDataDownload, "setImagePreviewExtensionAndSize");
+        @imageGrid.Render()
+
+        DbNetGridCore downloadGrid = new DbNetGridCore("northwind", "employees", "downloadGrid")
+        {
+            Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
+            PageSize = 5
+        };
+        downloadGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+        downloadGrid.SetColumnProperty("Photo", ColumnPropertyType.Download, true);
+        downloadGrid.Bind(EventType.OnCellDataDownload, "setDownloadFileName");
+        @downloadGrid.Render()
+    }
+}
+
+@section Scripts {
+<script type="text/javascript" class="source">
+function setImagePreviewExtensionAndSize(sender, args) {
+    var photoPath = sender.columnValue("PhotoPath", args.row);
+    args.extension = photoPath.split(".")[photoPath.split(".").length - 1];
+    $(args.image).height(30).width(30);
+}
+
+function setDownloadFileName(sender, args) {
+    var photoPath = sender.columnValue("PhotoPath", args.row);
+    args.fileName = photoPath.split("/")[photoPath.split("/").length - 1];
+}
+</script>
+}
+
+@section Source
+    {
+    <pre>
+    <code class="language-csharp">
+DbNetGridCore imageGrid = new DbNetGridCore("northwind", "employees", "imageGrid")
+{
+    Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
+    PageSize = 5
+};
+imageGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+imageGrid.SetColumnProperty("Photo", ColumnPropertyType.Image, true);
+imageGrid.Bind(EventType.OnCellDataDownload, "setImagePreviewExtensionAndSize");
+@@imageGrid.Render()
+
+DbNetGridCore downloadGrid = new DbNetGridCore("northwind", "employees", "downloadGrid")
+{
+    Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
+    PageSize = 5
+};
+downloadGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+downloadGrid.SetColumnProperty("Photo", ColumnPropertyType.Download, true);
+downloadGrid.Bind(EventType.OnCellDataDownload, "setDownloadFileName");
+@@downloadGrid.Render()
+        </code>
+    </pre>
+}

@@ -1,0 +1,161 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@{
+    Layout = "_index";
+}
+@section Styles
+{
+    <style>
+        img.card {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            margin-bottom:5px;
+            padding:0px;
+        }
+        
+        .card {
+            border: 1px solid #ddd;
+            background-color: whitesmoke;
+            border-radius: 2px;
+            padding:5px;
+            height:100%
+        }
+
+        span.logo {
+            font-weight:bold;
+            font-family:"courier new";
+        }
+        
+        .card-body{
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+        }
+        
+        .btn-sm {
+            padding: 0.1rem 0.2rem;
+        }
+        
+        .headline
+        {
+            background-color: whitesmoke !important;
+            border: 5px solid steelblue !important;
+            padding-top:30px;
+        }
+        
+        .container
+        {
+            padding-left:0px;
+            padding-right: 0px;
+        }
+
+        hr {
+            margin-bottom: 0;
+        }
+
+        span.beta
+        {
+            font-weight:bold;
+            background-color:lightblue;
+        }
+
+    </style>
+}
+<div class="album">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="col">
+                <div class="card">
+                    <img src="images/program.png" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Added to your solution in seconds. <span class="logo">DbNetSuiteCore</span> is implemented as a middleware component creating minimal disruption to your existing code.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center headline">
+                    <h1 class="fw-light">Web reporting made easy</h1>
+                    <p class="lead text-muted"><span class="logo">DbNetSuiteCore</span> is an ASP.NET Core middleware component that simplifies the presentation of database information in a browser.</p>
+                    <p>
+                        <a href="/samples/simple" class="btn btn-primary my-2" role="button">Samples</a>
+                        <a href="https://dbnetsuitecoreapp.azurewebsites.net/gettingstarted" class="btn btn-secondary my-2" role="button">Getting Started</a>
+                        <a href="https://dbnetsuitecore.z35.web.core.windows.net/" class="btn btn-secondary my-2" role="button" target="_blank">Help</a>
+                    </p>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <img src="images/source.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Easily added to any Razor view with as little as 2 lines of code.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <img src="images/search.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Comprehensive search capabilities out of the box. @DemoButton("simple")</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card">
+                    <img src="images/nested.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Grid components can be linked together to create layered access to information. @DemoButton("nestedgrid")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="images/grouping.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Customise the way you present your information. @DemoButton("groupHeader")</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card">
+                    <img src="images/totals.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Add grouping with aggregates including sum, average, maximum and minimum. @DemoButton("Subtotals")</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card">
+                    <img src="images/chart.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Simple integration with charting libraries. @DemoButton("GroupByChart")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="images/style.jpg" class="card" />
+                    <div class="card-body">
+                        <p class="card-text">Override the default styles to create your own look & feel. @DemoButton("Css")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions
+{
+    private HtmlString DemoButton(string sample)
+    {
+        return new HtmlString($"<a href=\"/samples/{sample}\" class=\"btn btn-sm btn-outline-primary\">Demo</a>");
+    }
+
+}

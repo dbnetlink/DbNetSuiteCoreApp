@@ -1,0 +1,54 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+
+@model SampleModel
+@section Title
+{
+    <p>This demo uses the @Model.HelpLink("events.htm#OnCellTransform", "OnCellTransform") event to add a button to the grid that is used to invoke another page with a query parameter used as a filter.</p>
+}
+
+@section Control
+{
+    @{
+        DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers");
+        customersGrid.Columns = new List<string>() { "CompanyName", "Address","City", "Country", "Phone","Fax", "' ' as Orders", "CustomerId" };
+        customersGrid.RowSelect = false;
+        customersGrid.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone","Fax"," "," " };
+        customersGrid.SetColumnProperty("CustomerId", ColumnPropertyType.DataOnly, true);
+        customersGrid.Bind(EventType.OnCellTransform, "addButton");
+        @customersGrid.Render()
+    }
+}
+
+@section Scripts
+{
+<script type="text/javascript" class="source">
+function addButton(sender, args) {
+	switch(args.columnName.toLowerCase())
+	{
+        case "orders":
+            var $cell = $(args.cell);
+            var $row = $(args.row);
+            var customerId = sender.columnValue("CustomerId", $row);
+                    $cell.html(`<a target='_blank' href='/samples/detail?customerid=${customerId}'>Orders</a>`).css('background-color', '#fff').css('text-align', 'center')
+			break;   
+	}
+}
+</script>
+}
+
+@section Source
+{
+<pre>
+<code class="language-csharp">
+DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers");
+customersGrid.Columns = new List<string>() { "CompanyName", "Address","City", "Country", "Phone","Fax", "' ' as Button", "CustomerId" };
+customersGrid.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone","Fax","" };
+customersGrid.SetColumnProperty("CustomerId", ColumnPropertyType.DataOnly, true);
+customersGrid.Bind(EventType.OnCellTransform, "addButton");
+@@customersGrid.Render()
+</code>
+</pre>
+}
