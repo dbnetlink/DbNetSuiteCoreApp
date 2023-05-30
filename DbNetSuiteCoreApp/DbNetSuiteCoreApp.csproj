@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="DbNetSuiteCore" Version="0.9.34-alpha" />
+    <PackageReference Include="DbNetSuiteCore" Version="0.9.36-beta" />
     <PackageReference Include="MySql.Data" Version="8.0.33" />
     <PackageReference Include="Npgsql" Version="8.0.0-preview.3" />
   </ItemGroup>

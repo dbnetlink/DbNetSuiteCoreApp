@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Data.SqlClient;
 using Dapper;
 using System.Linq;
 using System.Collections.Generic;
@@ -21,6 +20,7 @@ using System.Drawing;
 using DbNetSuiteCore.Utilities;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Html;
+using Microsoft.Data.SqlClient;
 
 namespace DbNetSuiteCoreApp.ViewModels
 {
