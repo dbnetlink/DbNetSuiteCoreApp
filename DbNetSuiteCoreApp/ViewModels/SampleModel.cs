@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Dapper;
 using System.Linq;
 using System.Collections.Generic;
@@ -21,27 +21,37 @@ using System.Drawing;
 using DbNetSuiteCore.Utilities;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Html;
+using DbNetSuiteCoreApp.Pages.Samples.DbNetGrid;
+using Microsoft.AspNetCore.Routing;
+using System.ComponentModel;
+using System.IO;
+using System;
+using Microsoft.AspNetCore.Components;
+using DbNetSuiteCoreApp.Enums;
 
 namespace DbNetSuiteCoreApp.ViewModels
 {
     public class SampleModel : PageModel
     {
         private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SampleModel(IConfiguration configuration, IWebHostEnvironment env) 
+        public SampleModel(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
-            _env = env;
+            _webHostEnvironment = webHostEnvironment;
             PopulateSamples();
         }
 
-        public List<SampleApp> Samples { get; set; } = new List<SampleApp>();
+        public Dictionary<Components, List<SampleApp>> Samples { get; set; } = new Dictionary<Components, List<SampleApp>>();
         public SampleApp SampleApp { get; set; }
         public SampleApp NextSampleApp { get; set; }
         public SampleApp PreviousSampleApp { get; set; }
+        public Components Component { get; set; }
 
         public string Title { get; set; }
+        public string SourceCode { get; set; }
+
         public string PageName { get; set; }
         public string FontFamily { get; set; }
         public string FontSize { get; set; }
@@ -62,8 +72,9 @@ namespace DbNetSuiteCoreApp.ViewModels
         public int? OrderId { get; set; } = null;
 
 
+
         public void OnGet(
-            string fontFamily = "verdana", 
+            string fontFamily = "verdana",
             string fontSize = "small",
             string db = null,
             string table = null,
@@ -96,7 +107,7 @@ namespace DbNetSuiteCoreApp.ViewModels
                 GetCultures();
             }
 
-            if (toolbarButtonStyle.HasValue )
+            if (toolbarButtonStyle.HasValue)
             {
                 ToolbarButtonStyle = toolbarButtonStyle.Value;
             }
@@ -112,47 +123,177 @@ namespace DbNetSuiteCoreApp.ViewModels
             CustomerId = customerId;
             OrderId = orderId;
 
-            PageName = HttpContext.Request.Path.ToString().Split("/").Last();
-            SampleApp = Samples.FirstOrDefault(s => s.Page.ToLower() == PageName.ToLower());
-
-            SampleApp ??= Samples.First();
-
-            var sampleIndex = Samples.IndexOf(SampleApp);
-            PreviousSampleApp = (sampleIndex > 0) ? Samples[sampleIndex - 1] : Samples.Last();
-            NextSampleApp = (sampleIndex < Samples.Count - 1) ? Samples[sampleIndex + 1] : Samples.First();
+            BuildMenu();
+            try
+            {
+                GetSourceCode();
+            }
+            catch (Exception ex)
+            {
+                SourceCode = $"{ex.Message} ({ex.StackTrace ?? string.Empty})";
+            }
         }
 
+        private void BuildMenu()
+        {
+            var segments = HttpContext.Request.Path.ToString().Split("/");
+            Component = (Components)Enum.Parse(typeof(Components), segments[^2], true);
+            PageName = $"{Component}/{segments.Last()}";
+
+            var samples = new List<SampleApp>();
+
+            foreach (var key in Samples.Keys)
+            {
+                samples.AddRange(Samples[key]);
+            }
+
+            SampleApp = samples.FirstOrDefault(s => s.Url.ToLower() == PageName.ToLower());
+            SampleApp ??= samples.First();
+
+            var sampleIndex = samples.IndexOf(SampleApp);
+            PreviousSampleApp = (sampleIndex > 0) ? samples[sampleIndex - 1] : samples.Last();
+            NextSampleApp = (sampleIndex < samples.Count - 1) ? samples[sampleIndex + 1] : samples.First();
+        }
+
+        private void GetSourceCode()
+        {
+            var routeName = (HttpContext.GetEndpoint() as RouteEndpoint).RoutePattern.RawText;
+            var fileInfo = _webHostEnvironment.ContentRootFileProvider.GetFileInfo($"pages/{routeName}.cshtml");
+            string fileContents = string.Empty;
+            using (var sr = new StreamReader(fileInfo.PhysicalPath))
+            {
+                fileContents = sr.ReadToEnd();
+            }
+
+            var fileLines = fileContents.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var collect = false;
+            var source = new List<string>();
+            foreach (string line in fileLines)
+            {
+                if (collect)
+                {
+                    if (line.StartsWith("}"))
+                    {
+                        break;
+                    }
+                    source.Add(line);
+                }
+                if (line.StartsWith("@section Control"))
+                {
+                    collect = true;
+                }
+            }
+            if (source.Any())
+            {
+                if (source.First() == "{")
+                {
+                    source.Remove(source.First());
+                }
+            }
+            if (source.Any())
+            {
+                if (source.Last() == "}")
+                {
+                    source.Remove(source.Last());
+                }
+            }
+            source.Insert(0, string.Empty);
+            source = source.Select(s => s.TrimStart()).ToList();
+            int indent = 0;
+            var indentedSource = new List<string>();
+            foreach (string line in source)
+            {
+                if (line.StartsWith("}"))
+                {
+                    indent--;
+                }
+                string indentedLine = string.Empty;
+                for (var i = 0; i < indent; i++)
+                {
+                    indentedLine += '\t';
+                }
+                indentedLine += line;
+                indentedSource.Add(indentedLine);
+                if (line.StartsWith("@{") || line.StartsWith("{"))
+                {
+                    indent++;
+                }
+            }
+            SourceCode = string.Join(Environment.NewLine, indentedSource);
+        }
         private void PopulateSamples()
         {
-            Samples.Add(new SampleApp("simple", "Simple"));
-            Samples.Add(new SampleApp("columns", "Specifying Columns"));
-            Samples.Add(new SampleApp("joiningtables", "Joining Tables"));
-            Samples.Add(new SampleApp("style", "Column styling"));
-            Samples.Add(new SampleApp("multirowselect", "Selecting Multiple Rows"));
-            Samples.Add(new SampleApp("nestedgrid", "Nesting Grids"));
-            Samples.Add(new SampleApp("linkedgrid", "Linking Grids"));
-            Samples.Add(new SampleApp("quicksearch", "Quick Search"));
-            Samples.Add(new SampleApp("columnfilters", "Column Filters"));
-            Samples.Add(new SampleApp("toolbarPosition", "Positioning/Styling Toolbar"));
-            Samples.Add(new SampleApp("frozenHeader", "Freezing the headings"));
-            Samples.Add(new SampleApp("master", "Linking to grids in another page"));
-            Samples.Add(new SampleApp("groupHeader", "Group headings"));
-            Samples.Add(new SampleApp("comparingCells", "Comparing cell values"));
-            Samples.Add(new SampleApp("cellTransformation", "Cell value transformation"));
-            Samples.Add(new SampleApp("binaryData", "Handling binary data"));
-            Samples.Add(new SampleApp("viewingRecord", "Viewing records"));
-            Samples.Add(new SampleApp("font", "Changing the font size/family"));
-            Samples.Add(new SampleApp("totals", "Adding totals"));
-            Samples.Add(new SampleApp("subtotals", "Adding sub-totals"));
-            Samples.Add(new SampleApp("groupBy", "Aggregating data"));
-            Samples.Add(new SampleApp("crosstab", "Cross tabulation"));
-            Samples.Add(new SampleApp("localisation", "Localisation"));
-            Samples.Add(new SampleApp("groupByChart", "Chart integration"));
-            Samples.Add(new SampleApp("MultiSeriesChart", "Multi-series Chart"));
-            Samples.Add(new SampleApp("Dashboard", "Dashboard"));
-            Samples.Add(new SampleApp("Css", "Customising the styling"));
+            Samples.Add(Components.DbNetGrid, DbNetGridSamples());
+            Samples.Add(Components.DbNetCombo, DbNetComboSamples());
+            Samples.Add(Components.DbNetEdit, DbNetEditSamples());
+        }
+        private List<SampleApp> DbNetGridSamples()
+        {
+            List<SampleApp> samples = new List<SampleApp>
+            {
+                new SampleApp("simple", "Simple"),
+                new SampleApp("columns", "Specifying Columns"),
+                new SampleApp("joiningtables", "Joining Tables"),
+                new SampleApp("style", "Column styling"),
+                new SampleApp("edit", "Editing The Grid"),
+                new SampleApp("linkededit", "Linked Edit"),
+                new SampleApp("multirowselect", "Selecting Multiple Rows"),
+                new SampleApp("nestedgrid", "Nesting Grids"),
+                new SampleApp("linkedgrids", "Linking Grids"),
+                new SampleApp("quicksearch", "Quick Search"),
+                new SampleApp("columnfilters", "Column Filters"),
+                new SampleApp("toolbarPosition", "Positioning/Styling Toolbar"),
+                new SampleApp("frozenHeader", "Freezing the headings"),
+                new SampleApp("master", "Linking to grids in another page"),
+                new SampleApp("groupHeader", "Group headings"),
+                new SampleApp("comparingCells", "Comparing cell values"),
+                new SampleApp("cellTransformation", "Cell value transformation"),
+                new SampleApp("binaryData", "Handling binary data"),
+                new SampleApp("viewingRecord", "Viewing records"),
+                new SampleApp("font", "Changing the font size/family"),
+                new SampleApp("totals", "Adding totals"),
+                new SampleApp("subtotals", "Adding sub-totals"),
+                new SampleApp("groupBy", "Aggregating data"),
+                new SampleApp("crosstab", "Cross tabulation"),
+                new SampleApp("localisation", "Localisation"),
+                new SampleApp("groupByChart", "Chart integration"),
+                new SampleApp("MultiSeriesChart", "Multi-series Chart"),
+                new SampleApp("Dashboard", "Dashboard"),
+                new SampleApp("Css", "Customising the styling"),
 
-            Samples.Add(new SampleApp("browsedb", "Browse a database"));
+                new SampleApp("browsedb", "Browse a database")
+            };
+
+            return samples;
+        }
+
+        private List<SampleApp> DbNetComboSamples()
+        {
+            List<SampleApp> samples = new List<SampleApp>
+            {
+                new SampleApp("simplecombo", "Simple", Components.DbNetCombo),
+                new SampleApp("filtered", "Filtered", Components.DbNetCombo),
+                new SampleApp("linked", "Linked", Components.DbNetCombo),
+                new SampleApp("multiple", "Size/Multiple", Components.DbNetCombo),
+                new SampleApp("linkedgrid", "Linked Grid", Components.DbNetCombo),
+                new SampleApp("datacolumns", "Data Columns", Components.DbNetCombo),
+                new SampleApp("distinct", "Distinct", Components.DbNetCombo),
+                new SampleApp("linkededit", "Linked Edit", Components.DbNetCombo)
+           };
+
+            return samples;
+        }
+
+        private List<SampleApp> DbNetEditSamples()
+        {
+            List<SampleApp> samples = new List<SampleApp>
+            {
+                new SampleApp("simple", "Simple", Components.DbNetEdit),
+                new SampleApp("linkededits", "Linked", Components.DbNetEdit)
+
+           };
+
+            return samples;
         }
 
         public void BrowseDbPopulate(string db = null)
@@ -165,7 +306,7 @@ namespace DbNetSuiteCoreApp.ViewModels
 
             Connections = connectonStrings.AsEnumerable().Select(c => c.Key).ToList();
 
-            using (var connection = new DbNetDataCore(connectionString, _env))
+            using (var connection = new DbNetDataCore(connectionString, _webHostEnvironment))
             {
                 connection.Open();
                 Tables = connection.InformationSchema(DbNetDataCore.MetaDataType.Tables);
@@ -188,7 +329,7 @@ namespace DbNetSuiteCoreApp.ViewModels
 
         private bool FilterConnectionString(string path)
         {
-            if (_env.IsDevelopment())
+            if (_webHostEnvironment.IsDevelopment())
             {
                 return true;
             }
@@ -207,7 +348,7 @@ namespace DbNetSuiteCoreApp.ViewModels
                 ConnectionString += ";";
 
             ConnectionString = Regex.Replace(ConnectionString, @"DataProvider=(.*?);", "", RegexOptions.IgnoreCase);
-            string CurrentPath = this._env.WebRootPath;
+            string CurrentPath = this._webHostEnvironment.WebRootPath;
             string DataSourcePropertyName = "data source";
             ConnectionString = Regex.Replace(ConnectionString, DataSourcePropertyName + "=~", DataSourcePropertyName + "=" + CurrentPath, RegexOptions.IgnoreCase).Replace("=//", "=/");
             return ConnectionString;
@@ -238,11 +379,14 @@ namespace DbNetSuiteCoreApp.ViewModels
 
     public class SampleApp
     {
+        public Components Component { get; set; }
         public string Page { get; set; }
         public string Title { get; set; }
+        public string Url => $"{Component}/{Page}";
 
-        public SampleApp(string page, string title)
+        public SampleApp(string page, string title, Components component = Components.DbNetGrid)
         {
+            Component = component;
             Page = page;
             Title = title;
         }

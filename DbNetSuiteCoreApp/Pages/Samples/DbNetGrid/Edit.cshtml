@@ -1,0 +1,42 @@
+﻿@page
+@using DbNetSuiteCore.Enums.DbNetEdit;
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+
+@model SampleModel
+
+@section Title
+{
+    <p>A grid can be made editable vis the edit dialog by setting the <b>Update</b>, <b>Insert</b> properties. The Edit control is an instance of DbNetEdit and can be configured independently using the <b>EditControl</b> property. The sample also uses the <b>OnFormElementCreated</b> event to customise the Notes textarea.</p>
+}
+
+@section Control
+{
+    @{
+        DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees");
+        employeesGrid.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstName"));
+        employeesGrid.Update = true;
+        employeesGrid.Insert = true;
+        employeesGrid.SetColumnHidden(new string[] { "notes", "photo" });
+        employeesGrid.EditControl.LayoutColumns = 2;
+        employeesGrid.EditControl.SetControlType("notes", EditControlType.TextArea);
+        employeesGrid.EditControl.SetColumnHidden("notes", false);
+        employeesGrid.EditControl.SetColumnDataType("notes", typeof(string));
+        employeesGrid.EditControl.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstName"));
+        employeesGrid.EditControl.Bind(EventType.OnFormElementCreated, "configureFormElement");
+        @employeesGrid.Render()
+    }
+}
+
+@section Scripts
+    {
+    <script type="text/javascript" class="source">
+        function configureFormElement(sender, args) {
+            if (args.columnName == "notes") {
+                args.formElement.rows = 4;
+                args.formElement.cols = 50;
+            }
+        }
+    </script>
+}
+

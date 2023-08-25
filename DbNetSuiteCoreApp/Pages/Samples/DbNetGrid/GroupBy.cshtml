@@ -1,0 +1,29 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums.DbNetGrid;
+@using DbNetSuiteCore.Enums;
+@model SampleModel
+
+@section Title
+{
+    <p>The @Model.HelpLink("properties.htm#GroupBy", "GroupBy") property groups the returned data by all the columns that do not have an @Model.HelpLink("methods.htm#Aggregate", "Aggregate") property set. In this example the data is grouped by Product.</p>
+}
+
+@section Control
+{
+    @{
+        DbNetGridCore productSalesSummaryGrid = new DbNetGridCore("northwind", "Invoices");
+        productSalesSummaryGrid.Columns = new List<string>() { "ProductName", "OrderDate as FirstOrder", "OrderDate as LastOrder", "(UnitPrice * Quantity) as TotalValue", "(UnitPrice * Quantity) as AvgValue" };
+        productSalesSummaryGrid.Labels = new List<string>() {  "Product", "First Order", "Last Order", "Total Value", "Average Value" };
+        productSalesSummaryGrid.GroupBy = true;
+        productSalesSummaryGrid.SetColumnFormat(new String[] { "TotalValue", "AvgValue" }, "c");
+        productSalesSummaryGrid.SetColumnFormat(new String[] { "FirstOrder", "LastOrder" }, "MMM yyyy");
+        productSalesSummaryGrid.SetColumnDataType(new String[] { "TotalValue", "AvgValue" }, typeof(Decimal));
+        productSalesSummaryGrid.SetColumnAggregate("FirstOrder", AggregateType.Min);
+        productSalesSummaryGrid.SetColumnAggregate("LastOrder", AggregateType.Max);
+        productSalesSummaryGrid.SetColumnAggregate("TotalValue", AggregateType.Sum);
+        productSalesSummaryGrid.SetColumnAggregate("AvgValue", AggregateType.Avg);
+        @productSalesSummaryGrid.Render()
+    }
+}

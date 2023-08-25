@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Html
+﻿@using DbNetSuiteCoreApp.Enums;
+@using Microsoft.AspNetCore.Html
 @using DbNetSuiteCoreApp.ViewModels
 @using DbNetSuiteCore.Components
 @model SampleModel
@@ -14,6 +15,14 @@
     <link rel="stylesheet" href="~/css/prism.css" />
     @DbNetSuiteCore.StyleSheet(Model.FontSize, Model.FontFamily)
     <style>
+        .more {
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiPjxwYXRoIGQ9Ik00ODAtMzQ1IDI0MC01ODVsNTYtNTYgMTg0IDE4NCAxODQtMTg0IDU2IDU2LTI0MCAyNDBaIi8+PC9zdmc+");
+        }
+
+        .less {
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiPjxwYXRoIGQ9Im0yOTYtMzQ1LTU2LTU2IDI0MC0yNDAgMjQwIDI0MC01NiA1Ni0xODQtMTg0LTE4NCAxODRaIi8+PC9zdmc+");
+        }
+
         pre {
             border: 1pt solid steelblue;
             margin-top: 10px;
@@ -28,6 +37,15 @@
             margin-top: 10px;
         }
 
+        .component {
+            font-weight: bold;
+            background-color: #F4D03F;
+            border: 1px solid #EB984E;
+            color: #1A5276;
+            border-radius: 2px;
+            padding-left: 5px;
+        }
+
         .selected-sample {
             font-weight: bold;
             background-position: center left;
@@ -37,6 +55,13 @@
             padding-left: 20px;
             background-color: lightblue;
             border: 1px solid steelblue;
+        }
+
+        .menu-title-text {
+            background-position: center right;
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            padding-right: 20px;
         }
 
         code[class*=language-] {
@@ -73,7 +98,7 @@
             }
 
         .btn-group-sm > .btn, .btn-sm {
-            margin-left: 10px;
+            margin-left: 2px;
             padding: 0.1rem 0.2rem;
             font-size: 1rem;
             border-radius: 0.2rem;
@@ -107,8 +132,31 @@
         span.core {
             color: #ccc;
         }
+
+        tr.menu-item {
+            display: none;
+        }
+
+        tr.menu-title {
+            cursor: pointer;
+        }
+
+        div.sample-title {
+            border: 1px solid silver;
+            border-radius: 5px;
+            background-color: whitesmoke;
+        }
+
     </style>
     @await RenderSectionAsync("Styles", required: false)
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C3GE0HX1BF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-C3GE0HX1BF');
+    </script>
 </head>
 <body>
     <main role="main" class="pb-3">
@@ -122,6 +170,7 @@
                         </div>
                     </div>
                     <div class="col-6" style="text-align:right">
+                        <a href="/" class="my-2">Home</a> |
                     </div>
                 </div>
                 <hr />
@@ -142,32 +191,44 @@
                                 </td>
                                 @if (Model.PreviousSampleApp != null)
                                 {
-                                    <td><a class="btn btn-sm btn-primary" role="button" href='/samples/@Model.PreviousSampleApp.Page'><i class="bi bi-arrow-left-circle-fill fa-2x"></i></a></td>
+                                    <td><a class="btn btn-sm btn-primary" role="button" href='/samples/@Model.PreviousSampleApp.Url'><i class="bi bi-arrow-left-circle-fill fa-2x"></i></a></td>
                                 }
                                 @if (Model.NextSampleApp != null)
                                 {
-                                    <td><a class="btn btn-sm btn-primary" role="button" href='/samples/@Model.NextSampleApp.Page'><i class="bi bi-arrow-right-circle-fill fa-2x"></i></a></td>
+                                    <td><a class="btn btn-sm btn-primary" role="button" href='/samples/@Model.NextSampleApp.Url'><i class="bi bi-arrow-right-circle-fill fa-2x"></i></a></td>
                                 }
                             </tr>
                         </table>
 
                         <table class="table>">
-                            @foreach (var sample in Model.Samples)
+                            @foreach (var component in Model.Samples.Keys)
                             {
-                                @Row(sample.Page, sample.Title, Model)
+                                @Section(component)
+                                var samples = Model.Samples[component];
+                                @foreach (var sample in samples)
+                                {
+                                    @Row($"{component}/{sample.Page}", component, sample.Title, Model)
+                                }
                             }
+
                         </table>
                     </div>
                 }
                 <div class="col-@(showMenu ? "10" : "12")">
                     <main role="main">
                         <h3>@Model.Title</h3>
-                        <div class="row">
-                            <div class="col-11">
-                                @await RenderSectionAsync("Title", required: false)
-                            </div>
-                            <div class="col-1">
-                                <a href="https://dbnetsuitecore.z35.web.core.windows.net/" class="btn btn-sm btn-outline-primary my-2" role="button" target="_blank">Help</a>
+                        <div>
+                            <div class="sample-title p-2 mb-2">
+                                <table>
+                                    <tr>
+                                        <td style="width:100%">
+                                            @await RenderSectionAsync("Title", required: false)
+                                        </td>
+                                        <td>
+                                            <a href="https://dbnetsuitecore.z35.web.core.windows.net/" class="btn btn-sm btn-primary my-2" role="button" target="_blank">Help</a>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
 
@@ -188,7 +249,12 @@
                             </div>
                             <div class="tab-pane fade" id="source" role="tabpanel" aria-labelledby="sourtce-tab">
                                 <h5>Razor</h5>
-                                @await RenderSectionAsync("Source", required: false)
+                                <pre>
+                                <code class="language-csharp">@Model.SourceCode</code>
+                                </pre>
+                                <div style="display:none">
+                                    @await RenderSectionAsync("Source", required: false)
+                                </div>
                                 <div class="client-source" style="display:none">
                                     <h5>JavaScript</h5>
                                     <pre><code class="language-javascript"></code></pre>
@@ -206,6 +272,11 @@
                     </main>
                 </div>
             </div>
+            <footer class="py-2">
+                <div class="d-flex flex-column flex-sm-row justify-content-between py-1 my-1 border-top">
+                    <p>&copy; @DateTime.Today.ToString("yyyy") DbNetLink Limited. All rights reserved.</p>
+                </div>
+            </footer>
         </div>
     </main>
 
@@ -239,16 +310,22 @@
             Prism.highlightAll();
         });
     </script>
+    <script type="text/javascript" src="/js/sample.js" asp-append-version="true"></script>
 </body>
 </html>
 @functions
 {
-    static HtmlString Row(string pageName, string label, SampleModel model)
+    static HtmlString Row(string pageName, Components component, string label, SampleModel model)
     {
         var currentPage = (pageName.ToLower() == model.PageName.ToLower());
         var className = currentPage ? "selected-sample next-icon-left-svg" : null;
         var contents = currentPage ? label : $"<a href='/samples/{pageName}'>{label}</a>";
 
-        return new HtmlString($"<tr><td><div class=\"{className}\">{contents}</div></td></tr>");
+        return new HtmlString($"<tr class=\"{component.ToString().ToLower()}-item menu-item\" data-component=\"{component.ToString().ToLower()}\" data-page=\"{pageName}\"><td><div class=\"{className}\">{contents}</div></td></tr>");
+    }
+
+    static HtmlString Section(Components component)
+    {
+        return new HtmlString($"<tr class=\"{component.ToString().ToLower()}-title menu-title\" data-component=\"{component.ToString().ToLower()}\"><td><div class=\"component menu-title-text more\">{component.ToString()}</div></td></tr>");
     }
 }
