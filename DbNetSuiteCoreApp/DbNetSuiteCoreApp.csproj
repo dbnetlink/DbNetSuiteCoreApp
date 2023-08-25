@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="DbNetSuiteCore" Version="0.9.462-beta" />
+    <PackageReference Include="DbNetSuiteCore" Version="0.9.463-beta" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
