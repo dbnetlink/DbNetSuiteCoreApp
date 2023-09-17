@@ -33,12 +33,12 @@
 
         for (int month = 1; month <= 12; month++)
         {
-            productSalesByCategoryGrid.SetColumnProperty($"period{month.ToString("00")}", ColumnPropertyType.Format, "c");
-            productSalesByCategoryGrid.SetColumnProperty($"period{month.ToString("00")}", ColumnPropertyType.DataType, nameof(Decimal));
-            productSalesByCategoryGrid.SetColumnProperty($"period{month.ToString("00")}", ColumnPropertyType.Aggregate, AggregateType.Sum);
+            productSalesByCategoryGrid.SetColumnFormat($"period{month.ToString("00")}", "c");
+            productSalesByCategoryGrid.SetColumnDataType($"period{month.ToString("00")}", typeof(Decimal));
+            productSalesByCategoryGrid.SetColumnAggregate($"period{month.ToString("00")}", AggregateType.Sum);
         }
 
-        productSalesByCategoryGrid.SetColumnProperty("CategoryId", ColumnPropertyType.Lookup, new Lookup("Categories", "CategoryId", "CategoryName"));
+        productSalesByCategoryGrid.SetColumnLookup("CategoryId", new Lookup("Categories", "CategoryId", "CategoryName"));
         @productSalesByCategoryGrid.Render()
     }
 }

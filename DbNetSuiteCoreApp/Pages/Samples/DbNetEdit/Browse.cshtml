@@ -1,0 +1,65 @@
+﻿@page
+@using DbNetSuiteCore.Enums.DbNetEdit;
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+
+@model SampleModel
+
+@section Title
+    {
+    <p>Using the @Model.HelpLink("dbnetedit_methods.htm","SetColumnBrowse") method to make certain fields browsable will result the addition of a Browse button to the toolbar which allows the record set to be viewed and navigated. The browse control in an instance of the @Model.HelpLink("constructors.htm","DbNetSuiteCore") control and can be configured via the @Model.HelpLink("dbnetedit_properties.htm","BrowseControl") property.</p>
+}
+
+@section Control {
+    @{
+        DbNetEditCore employeesEdit = new DbNetEditCore("northwind", "employees");
+        employeesEdit.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
+        employeesEdit.SetControlType("notes", EditControlType.TextArea);
+        employeesEdit.SetColumnPattern("titleofcourtesy", "Mr.|Dr.|Ms.|Mr.");
+        employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
+        employeesEdit.SetColumnBrowse(new string[] { "lastname", "firstname", "photo" });
+        employeesEdit.SetColumnRequired(new string[] { "lastname", "firstname", "titleofcourtesy" });
+        employeesEdit.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
+        employeesEdit.MaxImageHeight = 40;
+        employeesEdit.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+        employeesEdit.BrowseControl.MaxImageHeight = 20;
+        employeesEdit.LayoutColumns = 2;
+        employeesEdit.Insert = true;
+        employeesEdit.Delete = true;
+        @employeesEdit.Render()
+    }
+}
+
+@section Source {
+DbNetEditCore employeesEdit = new DbNetEditCore("northwind", "employees");
+employeesEdit.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
+employeesEdit.SetControlType("notes", EditControlType.TextArea);
+employeesEdit.SetColumnPattern("titleofcourtesy", "Mr.|Dr.|Ms.|Mr.");
+employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
+employeesEdit.SetColumnBrowse(new string[] { "lastname", "firstname", "photo" });
+employeesEdit.SetColumnRequired(new string[] { "lastname", "firstname", "titleofcourtesy" });
+employeesEdit.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
+employeesEdit.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+employeesEdit.BrowseControl.MaxImageHeight = 20;
+employeesEdit.LayoutColumns = 2;
+employeesEdit.Insert = true;
+employeesEdit.Delete = true;
+@@employeesEdit.Render()
+}
+
+@section Scripts {
+    <script type="text/javascript" class="source">
+        function configureFormElement(sender, args) {
+            if (args.columnName == "notes") {
+                args.formElement.rows = 4;
+                args.formElement.cols = 20;
+            }
+        }
+
+        function configureImageFileName(sender, args) {
+            var fileName = sender.columnValue("photopath");
+            args.fileName = fileName.split('/').pop().replace(".bmp", ".jpg");
+        }
+
+    </script>
+}

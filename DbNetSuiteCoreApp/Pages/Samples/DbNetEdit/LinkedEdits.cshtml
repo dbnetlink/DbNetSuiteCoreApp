@@ -1,0 +1,114 @@
+﻿@page
+@using DbNetSuiteCore.Enums.DbNetEdit;
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums;
+
+@using Microsoft.AspNetCore.Html
+@model SampleModel
+@section Title
+    {
+    <p>Instances of DbNetEditCore can be linked together to create parent child relationships. To link a child edit simply add it to the parent control using the @Model.HelpLink("dbnetedit_methods.htm#AddLinkedControl", "AddLinkedControl") method. The edit controls are linked by automatically associating the column in the child edit control specified as a @Model.HelpLink("dbnetedit_methods.htm#SetColumnAsForeignKey", "ForeignKey") with the column in the parent Edit identified as a @Model.HelpLink("dbnetedit_methods.htm#SetColumnAsPrimaryKey", "PrimaryKey") (usually automatic). This sample also demonstrates how to use custom HTML markup by specifyng the <b>Id</b> of the containing element as a 3rd argument to the @Model.HelpLink("dbnetedit_constructors.htm","constructor").</p>
+}
+
+@section Styles
+    {
+    <style>
+        .dbnetsuite {
+            margin-top: 10px;
+        }
+    </style>
+}
+@section Markup
+    {
+    <div class="source">
+        <div class="row">
+            <div class="col">
+                <h5>Customers</h5>
+                <hr />
+                <div id="customersEdit"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h5>Orders</h5>
+                <hr />
+                <div id="ordersEdit"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h5>Order Details</h5>
+                <hr />
+                <div id="orderDetailsEdit"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Control {
+    @{
+DbNetEditCore orderDetailsEdit = new DbNetEditCore("northwind", "[order details]", "orderDetailsEdit");
+orderDetailsEdit.SetColumnAsForeignKey("OrderID");
+orderDetailsEdit.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+orderDetailsEdit.SetColumnFormat("UnitPrice", "c");
+orderDetailsEdit.SetColumnLabel("ProductID", "Product");
+orderDetailsEdit.LayoutColumns = 3;
+
+DbNetEditCore ordersEdit = new DbNetEditCore("northwind", "orders", "ordersEdit");
+ordersEdit.SetColumnDisplay("CustomerID", false);
+ordersEdit.SetColumnAsForeignKey("CustomerID");
+ordersEdit.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+ordersEdit.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName")); ;
+ordersEdit.SetColumnLookup("ShipVia", new Lookup("Suppliers", "SupplierId", "CompanyName"));
+ordersEdit.SetColumnFormat("Freight", "c");
+ordersEdit.SetColumnLabel("EmployeeID", "Employee");
+ordersEdit.LayoutColumns = 3;
+ordersEdit.AddLinkedControl(orderDetailsEdit);
+
+DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers", "customersEdit");
+
+customersEdit.SetColumnDisplay("CustomerID", false);
+customersEdit.AddLinkedControl(ordersEdit);
+customersEdit.LayoutColumns = 3;
+
+@customersEdit.Render()
+    }
+}
+
+@section Source {
+DbNetEditCore orderDetailsEdit = new DbNetEditCore("northwind", "[order details]", "orderDetailsEdit");
+orderDetailsEdit.SetColumnAsForeignKey("OrderID");
+orderDetailsEdit.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+orderDetailsEdit.SetColumnFormat("UnitPrice", "c");
+orderDetailsEdit.SetColumnLabel("ProductID", "Product");
+orderDetailsEdit.LayoutColumns = 3;
+
+DbNetEditCore ordersEdit = new DbNetEditCore("northwind", "orders", "ordersEdit");
+ordersEdit.SetColumnDisplay("CustomerID", false);
+ordersEdit.SetColumnAsForeignKey("CustomerID");
+ordersEdit.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+ordersEdit.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName")); ;
+ordersEdit.SetColumnLookup("ShipVia", new Lookup("Suppliers", "SupplierId", "CompanyName"));
+ordersEdit.SetColumnFormat("Freight", "c");
+ordersEdit.SetColumnLabel("EmployeeID", "Employee");
+ordersEdit.LayoutColumns = 3;
+ordersEdit.AddLinkedControl(orderDetailsEdit);
+
+DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers", "customersEdit");
+
+customersEdit.SetColumnDisplay("CustomerID", false);
+customersEdit.AddLinkedControl(ordersEdit);
+customersEdit.LayoutColumns = 3;
+
+@@customersEdit.Render()
+}
+
+@functions
+{
+    public static HtmlString Tab(string label, bool active)
+    {
+        string name = label.ToLower().Replace(" ", string.Empty);
+        return new HtmlString($"<li class=\"nav-item\" role=\"presentation\"><button class=\"nav-link {(active ? "active" : string.Empty)}\" id=\"{name}-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#{name}\" type=\"button\" role=\"tab\" aria-controls=\"{name}\" aria-selected=\"{active.ToString().ToLower()}\">{label}</button></li>");
+    }
+}

@@ -1,0 +1,39 @@
+﻿@page
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+
+@model SampleModel
+
+@section Title
+{
+    <p>The records in the dataset can be pre-filtered using the @Model.HelpLink("dbnetedit_properties.htm","FixedFilterSql") and @Model.HelpLink("dbnetedit_properties.htm","FixedFilterParams") properties. In this example only products that have not been discontinued are selected for editing.</p>
+}
+
+@section Control
+{
+    @{
+        DbNetEditCore productsEdit = new DbNetEditCore("northwind","products");
+        productsEdit.SetColumnDataType("discontinued", typeof(Boolean));
+        productsEdit.SetColumnLookup("categoryid", new Lookup("Categories", "CategoryID", "CategoryName"));
+        productsEdit.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierID", "CompanyName"));
+        productsEdit.SetColumnLabel("categoryid", "Category");
+        productsEdit.SetColumnLabel("SupplierID", "Supplier");
+        productsEdit.FixedFilterSql = "discontinued = @discontinued";
+        productsEdit.FixedFilterParams["discontinued"] = false;
+        productsEdit.Insert = true;
+        @productsEdit.Render()
+    }
+}
+
+@section Source {
+DbNetEditCore productsEdit = new DbNetEditCore("northwind","products");
+productsEdit.SetColumnDataType("discontinued", typeof(Boolean));
+productsEdit.SetColumnLookup("categoryid", new Lookup("Categories", "CategoryID", "CategoryName"));
+productsEdit.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierID", "CompanyName"));
+productsEdit.SetColumnLabel("categoryid", "Category");
+productsEdit.SetColumnLabel("SupplierID", "Supplier");
+productsEdit.FixedFilterSql = "discontinued = @@discontinued";
+productsEdit.FixedFilterParams["discontinued"] = false;
+productsEdit.Insert = true;
+@@productsEdit.Render()
+}

@@ -27,7 +27,7 @@
             Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
             PageSize = 5
         };
-        imageGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+        imageGrid.SetColumnDisplay("EmployeeId", false);
         imageGrid.SetColumnProperty("Photo", ColumnPropertyType.Image, true);
         imageGrid.Bind(EventType.OnCellDataDownload, "setImagePreviewExtensionAndSize");
         @imageGrid.Render()
@@ -37,7 +37,7 @@
             Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
             PageSize = 5
         };
-        downloadGrid.SetColumnProperty("EmployeeId", ColumnPropertyType.Display, false);
+        downloadGrid.SetColumnDisplay("EmployeeId", false);
         downloadGrid.SetColumnProperty("Photo", ColumnPropertyType.Download, true);
         downloadGrid.Bind(EventType.OnCellDataDownload, "setDownloadFileName");
         @downloadGrid.Render()

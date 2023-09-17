@@ -20,12 +20,12 @@
             PageSize = 10,
             BooleanDisplayMode = BooleanDisplayMode.Checkbox,
         };
-        productsGrid.SetColumnProperty(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" },ColumnPropertyType.Filter, true);
-        productsGrid.SetColumnProperty("SupplierID", ColumnPropertyType.Lookup, new Lookup("Suppliers", "SupplierId", "CompanyName"));
-        productsGrid.SetColumnProperty("CategoryID", ColumnPropertyType.Lookup, new Lookup("Categories", "CategoryId", "CategoryName"));
-        productsGrid.SetColumnProperty("UnitPrice", ColumnPropertyType.Format, "c");
-        productsGrid.SetColumnProperty("CategoryID", ColumnPropertyType.FilterMode, FilterMode.List);
-        productsGrid.SetColumnProperty("Discontinued", ColumnPropertyType.DataType, "Boolean");
+        productsGrid.SetColumnFilter(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" });
+        productsGrid.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierId", "CompanyName"));
+        productsGrid.SetColumnLookup("CategoryID", new Lookup("Categories", "CategoryId", "CategoryName"));
+        productsGrid.SetColumnFormat("UnitPrice", "c");
+        productsGrid.SetColumnFilterMode("CategoryID", FilterMode.List);
+        productsGrid.SetColumnDataType("Discontinued", typeof(Boolean));
 
         @productsGrid.Render()
     }

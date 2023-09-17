@@ -1,0 +1,127 @@
+﻿@page
+@using DbNetSuiteCore.Enums.DbNetGrid;
+@using DbNetSuiteCoreApp.ViewModels;
+@using DbNetSuiteCore.Components;
+@using DbNetSuiteCore.Enums
+
+@model SampleModel
+
+@section Title
+    {
+    <p>With each grid control completely self-contained you can add multiple instances to a page to create a dashboard</p>
+}
+
+@section Styles
+    {
+    <style>
+        td.dashboard {
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        h6 {
+            margin-top: 10px;
+        }
+    </style>
+}
+@section Markup
+{
+    <div class="source">
+<table>
+    <tr>
+        <td class="dashboard">
+            <h6>Categories</h6>
+            <hr />
+            <div id="categoriesGrid"></div>
+            <h6>Shippers</h6>
+            <hr />
+            <div id="shippersGrid"></div>
+            <h6>Employees</h6>
+            <hr />
+            <div id="employeesGrid"></div>
+        </td>
+        <td class="dashboard">
+            <h6>Regions</h6>
+            <hr />
+            <div id="regionsGrid"></div>
+            <h6>Territories</h6>
+            <hr />
+            <div id="territoriesGrid"></div>
+        </td>
+    </tr>
+</table>
+    </div>
+}
+
+@section Control
+    {
+    @{
+        DbNetGridCore categoriesGrid = new DbNetGridCore("northwind", "categories", "categoriesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+        categoriesGrid.SetColumnAsImage("Picture", new ImageConfiguration("jpg"));
+        categoriesGrid.SetColumnHidden("CategoryId");
+        @categoriesGrid.Render()
+
+        DbNetGridCore regionsGrid = new DbNetGridCore("northwind", "regions", "regionsGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+        regionsGrid.SetColumnHidden("RegionId");
+        @regionsGrid.Render()
+
+        DbNetGridCore territoriesGrid = new DbNetGridCore("northwind", "territories", "territoriesGrid") { PageSize = 20, Search = false, Export = false, Copy = false };
+        territoriesGrid.SetColumnLookup("RegionID", new Lookup("regions", "regionId", "regiondescription"));
+        territoriesGrid.SetColumnHidden("TerritoryId");
+        @territoriesGrid.Render()
+
+        DbNetGridCore shippersGrid = new DbNetGridCore("northwind", "shippers", "shippersGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+        shippersGrid.SetColumnHidden("ShipperId");
+        @shippersGrid.Render()
+
+        DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "employeesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+        employeesGrid.Columns = new List<string>() { "LastName", "FirstName", "Title", "HomePhone" };
+        employeesGrid.Labels = new List<string>() { "Surname", "Forename", "Job Title", "Phone" };
+        employeesGrid.SetColumnHidden("EmployeeId");
+        @employeesGrid.Render()
+    }
+}
+
+@section Source {
+DbNetGridCore categoriesGrid = new DbNetGridCore("northwind", "categories", "categoriesGrid") 
+{ 
+    ToolbarPosition = ToolbarPosition.Hidden 
+};
+categoriesGrid.SetColumnAsImage("Picture", new ImageConfiguration("jpg"));
+categoriesGrid.SetColumnHidden("CategoryId");
+@@categoriesGrid.Render()
+
+DbNetGridCore regionsGrid = new DbNetGridCore("northwind", "regions", "regionsGrid") 
+{ 
+    ToolbarPosition = ToolbarPosition.Hidden 
+};
+regionsGrid.SetColumnHidden("RegionId");
+@@regionsGrid.Render()
+
+DbNetGridCore territoriesGrid = new DbNetGridCore("northwind", "territories", "territoriesGrid") 
+{ 
+    PageSize = 20, 
+    Search = false, 
+    Export = false, 
+    Copy = false 
+};
+territoriesGrid.SetColumnLookup("RegionID", new Lookup("regions", "regionId", "regiondescription"));
+territoriesGrid.SetColumnHidden("TerritoryId");
+@@territoriesGrid.Render()
+
+DbNetGridCore shippersGrid = new DbNetGridCore("northwind", "shippers", "shippersGrid") 
+{ 
+    ToolbarPosition = ToolbarPosition.Hidden 
+};
+shippersGrid.SetColumnHidden("ShipperId");
+@@shippersGrid.Render()
+
+DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "employeesGrid") 
+{ 
+    ToolbarPosition = ToolbarPosition.Hidden 
+};
+employeesGrid.Columns = new List<string>() { "LastName", "FirstName", "Title", "HomePhone" };
+employeesGrid.Labels = new List<string>() { "Surname", "Forename", "Job Title", "Phone" };
+employeesGrid.SetColumnHidden("EmployeeId");
+@@employeesGrid.Render()
+}
