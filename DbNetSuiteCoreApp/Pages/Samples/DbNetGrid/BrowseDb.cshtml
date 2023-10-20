@@ -65,9 +65,7 @@
             QuickSearch = true,
             View = true
         };
-        grid.SetColumnFilter("*");
-        grid.SetColumnView("*");
-        grid.SetColumnStyle("*", "{white-space:nowrap}");
+        grid.Column("*").Filter().View().Style("{white-space:nowrap}");
         @grid.Render()
     }
 }
@@ -79,9 +77,7 @@ DbNetGridCore grid = new DbNetGridCore(Model.Db, string.IsNullOrEmpty(Model.View
     QuickSearch = true,
     View = true
 };
-grid.SetColumnFilter("*");
-grid.SetColumnView("*");
-grid.SetColumnStyle("*", "{white-space:nowrap}");
+grid.Column("*").Filter().View().Style("{white-space:nowrap}");
 @@grid.Render()
 }
 

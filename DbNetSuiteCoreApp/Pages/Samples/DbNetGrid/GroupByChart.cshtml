@@ -20,10 +20,8 @@
         productSalesSummaryGrid.Labels = new List<string>() { "Category", "Total Value" };
         productSalesSummaryGrid.GroupBy = true;
         productSalesSummaryGrid.ToolbarPosition = ToolbarPosition.Hidden;
-        productSalesSummaryGrid.SetColumnFormat(new String[] { "TotalValue" }, "c");
-        productSalesSummaryGrid.SetColumnDataType(new String[] { "TotalValue" }, typeof(Decimal));
-        productSalesSummaryGrid.SetColumnAggregate("TotalValue", AggregateType.Sum);
-        productSalesSummaryGrid.SetColumnLookup("CategoryID", new Lookup("Categories", "CategoryId", "CategoryName"));
+        productSalesSummaryGrid.Column("TotalValue").Format("c").DataType(typeof(Decimal)).Aggregate(AggregateType.Sum);
+        productSalesSummaryGrid.Column("CategoryID").Lookup(new Lookup("Categories", "CategoryId", "CategoryName"));
         productSalesSummaryGrid.GoogleChartOptions = new GoogleChartOptions() { Type = GoogleChartType.PieChart, PanelId = "piechart", FunctionName = "chartOptions" };
         @productSalesSummaryGrid.Render()
     }
@@ -31,16 +29,12 @@
 
 @section Source {
 DbNetGridCore productSalesSummaryGrid = new DbNetGridCore("northwind", "Invoices join Products on Products.ProductID = Invoices.ProductId", "salesGrid");
-productSalesSummaryGrid.Columns = new List<string>
-() { "CategoryID", "(Invoices.UnitPrice * Invoices.Quantity) as TotalValue" };
-productSalesSummaryGrid.Labels = new List<string>
-() { "Category", "Total Value" };
+productSalesSummaryGrid.Columns = new List<string>() { "CategoryID", "(Invoices.UnitPrice * Invoices.Quantity) as TotalValue" };
+productSalesSummaryGrid.Labels = new List<string>() { "Category", "Total Value" };
 productSalesSummaryGrid.GroupBy = true;
 productSalesSummaryGrid.ToolbarPosition = ToolbarPosition.Hidden;
-productSalesSummaryGrid.SetColumnFormat(new String[] { "TotalValue" }, "c");
-productSalesSummaryGrid.SetColumnDataType(new String[] { "TotalValue" }, typeof(Decimal));
-productSalesSummaryGrid.SetColumnAggregate("TotalValue", AggregateType.Sum);
-productSalesSummaryGrid.SetColumnLookup("CategoryID", new Lookup("Categories", "CategoryId", "CategoryName"));
+productSalesSummaryGrid.Column("TotalValue").Format("c").DataType(typeof(Decimal)).Aggregate(AggregateType.Sum);
+productSalesSummaryGrid.Column("CategoryID").Lookup(new Lookup("Categories", "CategoryId", "CategoryName"));
 productSalesSummaryGrid.GoogleChartOptions = new GoogleChartOptions() { Type = GoogleChartType.PieChart, PanelId = "piechart", FunctionName = "chartOptions" };
 @@productSalesSummaryGrid.Render()
 }

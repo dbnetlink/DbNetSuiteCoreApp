@@ -48,67 +48,50 @@
 
 @section Control {
     @{
-DbNetEditCore orderDetailsEdit = new DbNetEditCore("northwind", "[order details]", "orderDetailsEdit");
-orderDetailsEdit.SetColumnAsForeignKey("OrderID");
-orderDetailsEdit.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
-orderDetailsEdit.SetColumnFormat("UnitPrice", "c");
-orderDetailsEdit.SetColumnLabel("ProductID", "Product");
-orderDetailsEdit.LayoutColumns = 3;
+        DbNetEditCore orderDetailsEdit = new DbNetEditCore("northwind", "[order details]", "orderDetailsEdit");
+        orderDetailsEdit.Column("OrderID").ForeignKey().Hidden();
+        orderDetailsEdit.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName")).Label("Product");
+        orderDetailsEdit.Column("UnitPrice").Format("c");
+        orderDetailsEdit.LayoutColumns = 3;
 
-DbNetEditCore ordersEdit = new DbNetEditCore("northwind", "orders", "ordersEdit");
-ordersEdit.SetColumnDisplay("CustomerID", false);
-ordersEdit.SetColumnAsForeignKey("CustomerID");
-ordersEdit.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-ordersEdit.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName")); ;
-ordersEdit.SetColumnLookup("ShipVia", new Lookup("Suppliers", "SupplierId", "CompanyName"));
-ordersEdit.SetColumnFormat("Freight", "c");
-ordersEdit.SetColumnLabel("EmployeeID", "Employee");
-ordersEdit.LayoutColumns = 3;
-ordersEdit.AddLinkedControl(orderDetailsEdit);
+        DbNetEditCore ordersEdit = new DbNetEditCore("northwind", "orders", "ordersEdit");
+        ordersEdit.Column("CustomerID").ForeignKey().Hidden();
+        ordersEdit.Column("EmployeeID").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname")).Label("Employee");
+        ordersEdit.Column("ShipVia").Lookup(new Lookup("Suppliers", "SupplierId", "CompanyName"));
+        ordersEdit.Column("Freight").Format("c");
+        ordersEdit.LayoutColumns = 3;
+        ordersEdit.AddLinkedControl(orderDetailsEdit);
 
-DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers", "customersEdit");
+        DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers", "customersEdit");
 
-customersEdit.SetColumnDisplay("CustomerID", false);
-customersEdit.AddLinkedControl(ordersEdit);
-customersEdit.LayoutColumns = 3;
+        customersEdit.Column("CustomerID").Hidden();
+        customersEdit.AddLinkedControl(ordersEdit);
+        customersEdit.LayoutColumns = 3;
 
-@customersEdit.Render()
+        @customersEdit.Render()
     }
 }
 
 @section Source {
 DbNetEditCore orderDetailsEdit = new DbNetEditCore("northwind", "[order details]", "orderDetailsEdit");
-orderDetailsEdit.SetColumnAsForeignKey("OrderID");
-orderDetailsEdit.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
-orderDetailsEdit.SetColumnFormat("UnitPrice", "c");
-orderDetailsEdit.SetColumnLabel("ProductID", "Product");
+orderDetailsEdit.Column("OrderID").ForeignKey().Hidden();
+orderDetailsEdit.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName")).Label("Product");
+orderDetailsEdit.Column("UnitPrice").Format("c");
 orderDetailsEdit.LayoutColumns = 3;
 
 DbNetEditCore ordersEdit = new DbNetEditCore("northwind", "orders", "ordersEdit");
-ordersEdit.SetColumnDisplay("CustomerID", false);
-ordersEdit.SetColumnAsForeignKey("CustomerID");
-ordersEdit.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-ordersEdit.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName")); ;
-ordersEdit.SetColumnLookup("ShipVia", new Lookup("Suppliers", "SupplierId", "CompanyName"));
-ordersEdit.SetColumnFormat("Freight", "c");
-ordersEdit.SetColumnLabel("EmployeeID", "Employee");
+ordersEdit.Column("CustomerID").ForeignKey().Hidden();
+ordersEdit.Column("EmployeeID").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname")).Label("Employee");
+ordersEdit.Column("ShipVia").Lookup(new Lookup("Suppliers", "SupplierId", "CompanyName"));
+ordersEdit.Column("Freight").Format("c");
 ordersEdit.LayoutColumns = 3;
 ordersEdit.AddLinkedControl(orderDetailsEdit);
 
 DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers", "customersEdit");
 
-customersEdit.SetColumnDisplay("CustomerID", false);
+customersEdit.Column("CustomerID").Hidden();
 customersEdit.AddLinkedControl(ordersEdit);
 customersEdit.LayoutColumns = 3;
 
 @@customersEdit.Render()
-}
-
-@functions
-{
-    public static HtmlString Tab(string label, bool active)
-    {
-        string name = label.ToLower().Replace(" ", string.Empty);
-        return new HtmlString($"<li class=\"nav-item\" role=\"presentation\"><button class=\"nav-link {(active ? "active" : string.Empty)}\" id=\"{name}-tab\" data-bs-toggle=\"tab\" data-bs-target=\"#{name}\" type=\"button\" role=\"tab\" aria-controls=\"{name}\" aria-selected=\"{active.ToString().ToLower()}\">{label}</button></li>");
-    }
 }

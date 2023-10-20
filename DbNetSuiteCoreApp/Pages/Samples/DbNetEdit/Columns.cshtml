@@ -14,14 +14,19 @@
         DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers");
         customersEdit.Columns = new List<string>() { "CustomerId", "CompanyName", "Address", "City", "Country", "Phone", "Fax" };
         customersEdit.Labels = new List<string>() { "CustomerId", "Company Name", "Address", "City", "Country", "Mobile", "Office" };
-        customersEdit.SetColumnHidden("CustomerID");
+        customersEdit.Column("CustomerID").Hidden();
+        customersEdit.Column("CompanyName").ReadOnly();
+        customersEdit.Column(new string[] { "CompanyName", "City", "Country" }).Search();
         @customersEdit.Render()
     }
 }
 
 @section Source {
 DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers");
-customersEdit.Columns = new List<string>() { "CompanyName", "Address", "City", "Country", "Phone", "Fax" };
-customersEdit.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone", "Fax" };
+customersEdit.Columns = new List<string>() { "CustomerId", "CompanyName", "Address", "City", "Country", "Phone", "Fax" };
+customersEdit.Labels = new List<string>() { "CustomerId", "Company Name", "Address", "City", "Country", "Mobile", "Office" };
+customersEdit.Column("CustomerID").Hidden();
+customersEdit.Column("CompanyName").ReadOnly();
+customersEdit.Column(new string[] { "CompanyName", "City", "Country" }).Search();
 @@customersEdit.Render()
 }

@@ -13,11 +13,10 @@
 {
     @{
         DbNetEditCore productsEdit = new DbNetEditCore("northwind","products");
-        productsEdit.SetColumnDataType("discontinued", typeof(Boolean));
-        productsEdit.SetColumnLookup("categoryid", new Lookup("Categories", "CategoryID", "CategoryName"));
-        productsEdit.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierID", "CompanyName"));
-        productsEdit.SetColumnLabel("categoryid", "Category");
-        productsEdit.SetColumnLabel("SupplierID", "Supplier");
+        productsEdit.Column("discontinued").DataType(typeof(Boolean));
+        productsEdit.Column("categoryid").Lookup(new Lookup("Categories", "CategoryID", "CategoryName")).Label("Category");
+        productsEdit.Column("SupplierID").Lookup(new Lookup("Suppliers", "SupplierID", "CompanyName")).Label("Supplier");
+        productsEdit.Column("UnitPrice").Style("background-color:gold; font-weight:bold;").Format("c");
         productsEdit.FixedFilterSql = "discontinued = @discontinued";
         productsEdit.FixedFilterParams["discontinued"] = false;
         productsEdit.Insert = true;
@@ -27,11 +26,10 @@
 
 @section Source {
 DbNetEditCore productsEdit = new DbNetEditCore("northwind","products");
-productsEdit.SetColumnDataType("discontinued", typeof(Boolean));
-productsEdit.SetColumnLookup("categoryid", new Lookup("Categories", "CategoryID", "CategoryName"));
-productsEdit.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierID", "CompanyName"));
-productsEdit.SetColumnLabel("categoryid", "Category");
-productsEdit.SetColumnLabel("SupplierID", "Supplier");
+productsEdit.Column("discontinued").DataType(typeof(Boolean));
+productsEdit.Column("categoryid").Lookup(new Lookup("Categories", "CategoryID", "CategoryName")).Label("Category");
+productsEdit.Column("SupplierID").Lookup(new Lookup("Suppliers", "SupplierID", "CompanyName")).Label("Supplier");
+productsEdit.Column("UnitPrice").Style("background-color:gold; font-weight:bold;").Format("c");
 productsEdit.FixedFilterSql = "discontinued = @@discontinued";
 productsEdit.FixedFilterParams["discontinued"] = false;
 productsEdit.Insert = true;

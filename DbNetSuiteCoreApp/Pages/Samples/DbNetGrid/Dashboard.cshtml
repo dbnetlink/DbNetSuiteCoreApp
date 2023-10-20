@@ -57,71 +57,53 @@
     {
     @{
         DbNetGridCore categoriesGrid = new DbNetGridCore("northwind", "categories", "categoriesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
-        categoriesGrid.SetColumnAsImage("Picture", new ImageConfiguration("jpg"));
-        categoriesGrid.SetColumnHidden("CategoryId");
+        categoriesGrid.Column("Picture").Image(new ImageConfiguration("jpg"));
+        categoriesGrid.Column("CategoryId").Hidden();
         @categoriesGrid.Render()
 
         DbNetGridCore regionsGrid = new DbNetGridCore("northwind", "regions", "regionsGrid") { ToolbarPosition = ToolbarPosition.Hidden };
-        regionsGrid.SetColumnHidden("RegionId");
+        regionsGrid.Column("RegionId").Hidden();
         @regionsGrid.Render()
 
         DbNetGridCore territoriesGrid = new DbNetGridCore("northwind", "territories", "territoriesGrid") { PageSize = 20, Search = false, Export = false, Copy = false };
-        territoriesGrid.SetColumnLookup("RegionID", new Lookup("regions", "regionId", "regiondescription"));
-        territoriesGrid.SetColumnHidden("TerritoryId");
+        territoriesGrid.Column("RegionID").Lookup(new Lookup("regions", "regionId", "regiondescription"));
+        territoriesGrid.Column("TerritoryId").Hidden();
         @territoriesGrid.Render()
 
         DbNetGridCore shippersGrid = new DbNetGridCore("northwind", "shippers", "shippersGrid") { ToolbarPosition = ToolbarPosition.Hidden };
-        shippersGrid.SetColumnHidden("ShipperId");
+        shippersGrid.Column("ShipperId").Hidden();
         @shippersGrid.Render()
 
         DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "employeesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
         employeesGrid.Columns = new List<string>() { "LastName", "FirstName", "Title", "HomePhone" };
         employeesGrid.Labels = new List<string>() { "Surname", "Forename", "Job Title", "Phone" };
-        employeesGrid.SetColumnHidden("EmployeeId");
+        employeesGrid.Column("EmployeeId").Hidden();
         @employeesGrid.Render()
     }
 }
 
 @section Source {
-DbNetGridCore categoriesGrid = new DbNetGridCore("northwind", "categories", "categoriesGrid") 
-{ 
-    ToolbarPosition = ToolbarPosition.Hidden 
-};
-categoriesGrid.SetColumnAsImage("Picture", new ImageConfiguration("jpg"));
-categoriesGrid.SetColumnHidden("CategoryId");
+DbNetGridCore categoriesGrid = new DbNetGridCore("northwind", "categories", "categoriesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+categoriesGrid.Column("Picture").Image(new ImageConfiguration("jpg"));
+categoriesGrid.Column("CategoryId").Hidden();
 @@categoriesGrid.Render()
 
-DbNetGridCore regionsGrid = new DbNetGridCore("northwind", "regions", "regionsGrid") 
-{ 
-    ToolbarPosition = ToolbarPosition.Hidden 
-};
-regionsGrid.SetColumnHidden("RegionId");
+DbNetGridCore regionsGrid = new DbNetGridCore("northwind", "regions", "regionsGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+regionsGrid.Column("RegionId").Hidden();
 @@regionsGrid.Render()
 
-DbNetGridCore territoriesGrid = new DbNetGridCore("northwind", "territories", "territoriesGrid") 
-{ 
-    PageSize = 20, 
-    Search = false, 
-    Export = false, 
-    Copy = false 
-};
-territoriesGrid.SetColumnLookup("RegionID", new Lookup("regions", "regionId", "regiondescription"));
-territoriesGrid.SetColumnHidden("TerritoryId");
+DbNetGridCore territoriesGrid = new DbNetGridCore("northwind", "territories", "territoriesGrid") { PageSize = 20, Search = false, Export = false, Copy = false };
+territoriesGrid.Column("RegionID").Lookup(new Lookup("regions", "regionId", "regiondescription"));
+territoriesGrid.Column("TerritoryId").Hidden();
 @@territoriesGrid.Render()
 
-DbNetGridCore shippersGrid = new DbNetGridCore("northwind", "shippers", "shippersGrid") 
-{ 
-    ToolbarPosition = ToolbarPosition.Hidden 
-};
-shippersGrid.SetColumnHidden("ShipperId");
+DbNetGridCore shippersGrid = new DbNetGridCore("northwind", "shippers", "shippersGrid") { ToolbarPosition = ToolbarPosition.Hidden };
+shippersGrid.Column("ShipperId").Hidden();
 @@shippersGrid.Render()
 
-DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "employeesGrid") 
-{ 
-    ToolbarPosition = ToolbarPosition.Hidden 
-};
+DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "employeesGrid") { ToolbarPosition = ToolbarPosition.Hidden };
 employeesGrid.Columns = new List<string>() { "LastName", "FirstName", "Title", "HomePhone" };
 employeesGrid.Labels = new List<string>() { "Surname", "Forename", "Job Title", "Phone" };
-employeesGrid.SetColumnHidden("EmployeeId");
+employeesGrid.Column("EmployeeId").Hidden();
 @@employeesGrid.Render()
 }

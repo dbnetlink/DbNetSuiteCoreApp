@@ -35,8 +35,8 @@
         ordersGrid.Columns = new List<string>() { "Customers.CompanyName", "Orders.OrderDate", "[Order Details].OrderID", "[Order Details].ProductID", "[Order Details].UnitPrice", "[Order Details].Quantity" };
         ordersGrid.Labels = new List<string>() { "Company Name", "Order Date", "Order ID", "Product", "Unit Price", "Qty" };
         ordersGrid.Culture = Model.Culture;
-        ordersGrid.SetColumnFormat("UnitPrice", "c");
-        ordersGrid.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+        ordersGrid.Column("UnitPrice").Format("c");
+        ordersGrid.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName"));
         @ordersGrid.Render()
     }
 }
@@ -46,8 +46,8 @@ DbNetGridCore ordersGrid = new DbNetGridCore("northwind", "Customers join Orders
 ordersGrid.Columns = new List<string>() { "Customers.CompanyName", "Orders.OrderDate", "[Order Details].OrderID", "[Order Details].ProductID", "[Order Details].UnitPrice", "[Order Details].Quantity" };
 ordersGrid.Labels = new List<string>() { "Company Name", "Order Date", "Order ID", "Product", "Unit Price", "Qty" };
 ordersGrid.Culture = Model.Culture;
-ordersGrid.SetColumnFormat("UnitPrice", "c");
-ordersGrid.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+ordersGrid.Column("UnitPrice").Format("c");
+ordersGrid.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName"));
 @@ordersGrid.Render()
 }
 

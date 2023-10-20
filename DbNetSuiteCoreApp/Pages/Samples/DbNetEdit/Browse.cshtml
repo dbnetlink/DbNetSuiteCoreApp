@@ -1,4 +1,5 @@
 ﻿@page
+@using DbNetSuiteCoreApp.Enums;
 @using DbNetSuiteCore.Enums.DbNetEdit;
 @using DbNetSuiteCoreApp.ViewModels;
 @using DbNetSuiteCore.Components;
@@ -7,21 +8,23 @@
 
 @section Title
     {
-    <p>Using the @Model.HelpLink("dbnetedit_methods.htm","SetColumnBrowse") method to make certain fields browsable will result the addition of a Browse button to the toolbar which allows the record set to be viewed and navigated. The browse control in an instance of the @Model.HelpLink("constructors.htm","DbNetSuiteCore") control and can be configured via the @Model.HelpLink("dbnetedit_properties.htm","BrowseControl") property.</p>
+    <p>Using the @Model.HelpLink("dbnetedit_methods.htm","SetColumnBrowse") method to make certain fields browsable will result the addition of a Browse button to the toolbar which allows the record set to be viewed and navigated. The browse control in an instance of the @Model.HelpLink("constructors.htm","DbNetGridCore") control and can be configured via the @Model.HelpLink("dbnetedit_properties.htm","BrowseControl") property. The sample also demonstrates use of the @Model.HelpLink("dbnetedit_methods.htm","SetColumnPattern") method to provide validation against the <b>Title Of Courtesy</b> field.</p>
 }
 
 @section Control {
     @{
         DbNetEditCore employeesEdit = new DbNetEditCore("northwind", "employees");
-        employeesEdit.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
-        employeesEdit.SetControlType("notes", EditControlType.TextArea);
-        employeesEdit.SetColumnPattern("titleofcourtesy", "Mr.|Dr.|Ms.|Mr.");
-        employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
-        employeesEdit.SetColumnBrowse(new string[] { "lastname", "firstname", "photo" });
-        employeesEdit.SetColumnRequired(new string[] { "lastname", "firstname", "titleofcourtesy" });
-        employeesEdit.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
+        employeesEdit.Column("ReportsTo").Lookup(new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
+        employeesEdit.Column("notes").ControlType(EditControlType.TextArea);
+        employeesEdit.Column("titleofcourtesy").Validation(new InputValidation("Mr.|Dr.|Ms.|Mr."));
+        employeesEdit.Column(new string[] { "lastname", "firstname", "photo", "country" }).Browse();
+        employeesEdit.Column(new string[] { "lastname", "firstname", "titleofcourtesy" }).Required();
+        employeesEdit.Column("Photo").Image(new ImageConfiguration("jpg"));
+        employeesEdit.Column("country").Lookup(typeof(CountryEnum), true);
         employeesEdit.MaxImageHeight = 40;
         employeesEdit.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+        employeesEdit.Bind(EventType.OnFormElementValidationFailed, "configureValidationMessage");
+        employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
         employeesEdit.BrowseControl.MaxImageHeight = 20;
         employeesEdit.LayoutColumns = 2;
         employeesEdit.Insert = true;
@@ -32,14 +35,17 @@
 
 @section Source {
 DbNetEditCore employeesEdit = new DbNetEditCore("northwind", "employees");
-employeesEdit.SetColumnLookup("ReportsTo", new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
-employeesEdit.SetControlType("notes", EditControlType.TextArea);
-employeesEdit.SetColumnPattern("titleofcourtesy", "Mr.|Dr.|Ms.|Mr.");
-employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
-employeesEdit.SetColumnBrowse(new string[] { "lastname", "firstname", "photo" });
-employeesEdit.SetColumnRequired(new string[] { "lastname", "firstname", "titleofcourtesy" });
-employeesEdit.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
+employeesEdit.Column("ReportsTo").Lookup(new Lookup("employees", "employeeid", "lastname + ', ' + firstname"));
+employeesEdit.Column("notes").ControlType(EditControlType.TextArea);
+employeesEdit.Column("titleofcourtesy").Validation(new InputValidation("Mr.|Dr.|Ms.|Mr."));
+employeesEdit.Column(new string[] { "lastname", "firstname", "photo", "country" }).Browse();
+employeesEdit.Column(new string[] { "lastname", "firstname", "titleofcourtesy" }).Required();
+employeesEdit.Column("Photo").Image(new ImageConfiguration("jpg"));
+employeesEdit.Column("country").Lookup(typeof(CountryEnum), true);
+employeesEdit.MaxImageHeight = 40;
 employeesEdit.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+employeesEdit.Bind(EventType.OnFormElementValidationFailed, "configureValidationMessage");
+employeesEdit.Bind(EventType.OnFormElementCreated, "configureFormElement");
 employeesEdit.BrowseControl.MaxImageHeight = 20;
 employeesEdit.LayoutColumns = 2;
 employeesEdit.Insert = true;
@@ -50,9 +56,12 @@ employeesEdit.Delete = true;
 @section Scripts {
     <script type="text/javascript" class="source">
         function configureFormElement(sender, args) {
-            if (args.columnName == "notes") {
-                args.formElement.rows = 4;
-                args.formElement.cols = 20;
+            switch (args.columnName) 
+            {
+                case "notes":
+                    args.formElement.rows = 4;
+                    args.formElement.cols = 20;
+                    break;
             }
         }
 
@@ -61,5 +70,18 @@ employeesEdit.Delete = true;
             args.fileName = fileName.split('/').pop().replace(".bmp", ".jpg");
         }
 
+        String.prototype.replaceLast = function (what, replacement) {
+            var pcs = this.split(what);
+            var lastPc = pcs.pop();
+            return pcs.join(what) + replacement + lastPc;
+        };
+
+        function configureValidationMessage(sender, args) {
+            if (args.key == "titleofcourtesy") {
+                const pattern = sender.formElement(args.key).attr("pattern");
+                const readablePattern = pattern.split('|').join(', ').replaceLast(",", " or");
+                args.value = `Title Of Courtesy should have a value of: ${readablePattern}`
+            }
+        }
     </script>
 }

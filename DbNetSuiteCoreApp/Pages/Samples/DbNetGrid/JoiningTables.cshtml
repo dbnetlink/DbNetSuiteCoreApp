@@ -16,8 +16,8 @@
         DbNetGridCore ordersGrid = new DbNetGridCore("northwind", "Customers join Orders on Customers.CustomerID = Orders.CustomerID join [Order Details] on Orders.OrderID = [Order Details].OrderID");
         ordersGrid.Columns = new List<string>() { "Customers.CompanyName", "Orders.OrderDate", "[Order Details].OrderID", "[Order Details].ProductID", "[Order Details].UnitPrice", "[Order Details].Quantity" };
         ordersGrid.Labels = new List<string>() { "Company Name", "Order Date", "Order ID", "Product", "Unit Price", "Qty" };
-        ordersGrid.SetColumnFormat("UnitPrice", "c");
-        ordersGrid.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+        ordersGrid.Column("UnitPrice").Format("c");
+        ordersGrid.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName"));
         @ordersGrid.Render()
     }
 }
@@ -26,7 +26,7 @@
 DbNetGridCore ordersGrid = new DbNetGridCore("northwind", "Customers join Orders on Customers.CustomerID = Orders.CustomerID join [Order Details] on Orders.OrderID = [Order Details].OrderID");
 ordersGrid.Columns = new List<string>() { "Customers.CompanyName", "Orders.OrderDate", "[Order Details].OrderID", "[Order Details].ProductID", "[Order Details].UnitPrice", "[Order Details].Quantity" };
 ordersGrid.Labels = new List<string>() { "Company Name", "Order Date", "Order ID", "Product", "Unit Price", "Qty" };
-ordersGrid.SetColumnFormat("UnitPrice", "c");
-ordersGrid.SetColumnLookup("ProductID", new Lookup("Products", "ProductId", "ProductName"));
+ordersGrid.Column("UnitPrice").Format("c");
+ordersGrid.Column("ProductID").Lookup(new Lookup("Products", "ProductId", "ProductName"));
 @@ordersGrid.Render()
 }

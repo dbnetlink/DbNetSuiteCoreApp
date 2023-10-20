@@ -21,23 +21,22 @@
 @section Control {
     @{
         DbNetGridCore ordersGrid = new DbNetGridCore("northwind", "orders", "ordersGrid")
-                {
-                    Columns = new List<string>() { "OrderID", "CustomerID", "EmployeeID", "OrderDate", "RequiredDate", "ShippedDate", "ShipVia", "Freight" },
-                    Labels = new List<string>() { "Order ID", "Customer ID", "Employee", "Date Ordered", "Date Required", "Date Shipped", "Ship Via", "Freight" },
-                    PageSize = 10
-                };
-        ordersGrid.SetColumnAsGroupHeader(new string[] { "CustomerID" });
-        ordersGrid.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-        ordersGrid.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName"));
-        ordersGrid.SetColumnLookup("ShipVia", new Lookup("Shippers", "ShipperId", "CompanyName"));
+        {
+            Columns = new List<string>() { "OrderID", "CustomerID", "EmployeeID", "OrderDate", "RequiredDate", "ShippedDate", "ShipVia", "Freight" },
+            Labels = new List<string>() { "Order ID", "Customer ID", "Employee", "Date Ordered", "Date Required", "Date Shipped", "Ship Via", "Freight" },
+            PageSize = 10
+        };
+        ordersGrid.Column("CustomerID").Lookup(new Lookup("Customers", "CustomerId", "CompanyName")).GroupHeader();
+        ordersGrid.Column("EmployeeID").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+        ordersGrid.Column("ShipVia").Lookup(new Lookup("Shippers", "ShipperId", "CompanyName"));
         @ordersGrid.Render()
 
         DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers", "customersGrid")
-                {
-                    Columns = new List<string>() { "ContactName", "ContactTitle", "Address", "Region", "PostalCode", "Phone", "Fax", "Country", "City" },
-                    PageSize = 10
-                };
-        customersGrid.SetColumnAsGroupHeader(new String[] { "Country", "City" });
+        {
+            Columns = new List<string>() { "ContactName", "ContactTitle", "Address", "Region", "PostalCode", "Phone", "Fax", "Country", "City" },
+            PageSize = 10
+        };
+        customersGrid.Column(new String[] { "Country", "City" }).GroupHeader();
 
         @customersGrid.Render()
     }
@@ -50,10 +49,9 @@ DbNetGridCore ordersGrid = new DbNetGridCore("northwind", "orders", "ordersGrid"
     Labels = new List<string>() { "Order ID", "Customer ID", "Employee", "Date Ordered", "Date Required", "Date Shipped", "Ship Via", "Freight" },
     PageSize = 10
 };
-ordersGrid.SetColumnAsGroupHeader(new string[] { "CustomerID" });
-ordersGrid.SetColumnLookup("EmployeeID", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-ordersGrid.SetColumnLookup("CustomerID", new Lookup("Customers", "CustomerId", "CompanyName"));
-ordersGrid.SetColumnLookup("ShipVia", new Lookup("Shippers", "ShipperId", "CompanyName"));
+ordersGrid.Column("CustomerID").Lookup(new Lookup("Customers", "CustomerId", "CompanyName")).GroupHeader();
+ordersGrid.Column("EmployeeID").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+ordersGrid.Column("ShipVia").Lookup(new Lookup("Shippers", "ShipperId", "CompanyName"));
 @@ordersGrid.Render()
 
 DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers", "customersGrid")
@@ -61,7 +59,7 @@ DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers", "custo
     Columns = new List<string>() { "ContactName", "ContactTitle", "Address", "Region", "PostalCode", "Phone", "Fax", "Country", "City" },
     PageSize = 10
 };
-customersGrid.SetColumnAsGroupHeader(new String[] { "Country", "City" });
+customersGrid.Column(new String[] { "Country", "City" }).GroupHeader();
 
 @@customersGrid.Render()
 }

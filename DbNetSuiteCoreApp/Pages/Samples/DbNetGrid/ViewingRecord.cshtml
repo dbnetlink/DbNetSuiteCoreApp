@@ -15,10 +15,10 @@
         {
             View = true
         };
-        employeesGrid.SetColumnLookup("reportsto", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-        employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
-        employeesGrid.SetColumnDataOnly(new String[] { "photo", "notes", "photopath" });
-        employeesGrid.SetColumnView(new String[] { "firstname", "lastname", "photo", "notes", "photopath" });
+        employeesGrid.Column("reportsto").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+        employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
+        employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).DataOnly();
+        employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
         employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
         employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
 
@@ -31,10 +31,10 @@ DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees")
 {
     View = true
 };
-employeesGrid.SetColumnLookup("reportsto", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
-employeesGrid.SetColumnHidden(new String[] { "photo", "notes", "photopath" });
-employeesGrid.SetColumnView(new String[] { "firstname", "lastname", "photo", "notes", "photopath" });
+employeesGrid.Column("reportsto").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
+employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).DataOnly();
+employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
 employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
 employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
 

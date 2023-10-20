@@ -14,8 +14,7 @@
     @{
         DbNetGridCore productsGrid = new DbNetGridCore("northwind", "Products");
         productsGrid.Columns = new List<string>() { "ProductName", "UnitPrice", "UnitsInStock" };
-        productsGrid.SetColumnStyle("UnitPrice", "background-color:gold; color:steelblue; font-weight:bold;");
-        productsGrid.SetColumnFormat("UnitPrice", "c");
+        productsGrid.Column("UnitPrice").Style("background-color:gold; color:steelblue").Format("c");
         productsGrid.ToolbarButtonStyle = ToolbarButtonStyle.ImageAndText;
         productsGrid.PageSize = 10;
        
@@ -27,8 +26,7 @@
 @section Source {
 DbNetGridCore productsGrid = new DbNetGridCore("northwind", "Products");
 productsGrid.Columns = new List<string>() { "ProductName", "UnitPrice", "UnitsInStock" };
-productsGrid.SetColumnStyle("UnitPrice", "background-color:gold; color:steelblue");
-productsGrid.SetColumnFormat("UnitPrice", "c");
+productsGrid.Column("UnitPrice").Style("background-color:gold; color:steelblue").Format("c");
 productsGrid.ToolbarButtonStyle = ToolbarButtonStyle.ImageAndText;
 productsGrid.PageSize = 10;
 

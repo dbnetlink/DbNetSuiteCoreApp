@@ -18,7 +18,7 @@
         ToolbarPosition = ToolbarPosition.Hidden,
         FrozenHeader = true
     };
-    customersGrid.SetColumnFilter(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" });
+    customersGrid.Column(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" }).Filter();
 
     @customersGrid.Render()
     }
@@ -31,7 +31,7 @@ DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers")
     ToolbarPosition = ToolbarPosition.Hidden,
     FrozenHeader = true
 };
-customersGrid.SetColumnFilter(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" });
+customersGrid.Column(new String[] { "CustomerId", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax" }).Filter();
 
 @@customersGrid.Render()
 }

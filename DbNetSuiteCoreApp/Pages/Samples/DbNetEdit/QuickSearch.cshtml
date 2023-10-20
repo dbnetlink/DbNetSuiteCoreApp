@@ -15,7 +15,7 @@
             {
                 QuickSearch = true
             };
-    customersEdit.SetColumnBrowse(new string[] { "CompanyName","City","Region"});
+    customersEdit.Column(new string[] { "CompanyName","City","Region"}).Browse();
     @customersEdit.Render()
     }
 }
@@ -25,7 +25,7 @@ DbNetEditCore customersEdit = new DbNetEditCore("northwind", "customers")
 {
     QuickSearch = true
 };
-customersEdit.SetColumnBrowse(new string[] { "CompanyName","City","Region"});
+customersEdit.Column(new string[] { "CompanyName","City","Region"}).Browse();
 @@customersEdit.Render()
 }
 

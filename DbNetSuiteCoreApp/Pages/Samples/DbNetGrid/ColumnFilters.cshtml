@@ -20,12 +20,11 @@
             PageSize = 10,
             BooleanDisplayMode = BooleanDisplayMode.Checkbox,
         };
-        productsGrid.SetColumnFilter(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" });
-        productsGrid.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierId", "CompanyName"));
-        productsGrid.SetColumnLookup("CategoryID", new Lookup("Categories", "CategoryId", "CategoryName"));
-        productsGrid.SetColumnFormat("UnitPrice", "c");
-        productsGrid.SetColumnFilterMode("CategoryID", FilterMode.List);
-        productsGrid.SetColumnDataType("Discontinued", typeof(Boolean));
+        productsGrid.Column(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" }).Filter();
+        productsGrid.Column("SupplierID").Lookup(new Lookup("Suppliers", "SupplierId", "CompanyName"));
+        productsGrid.Column("CategoryID").Lookup(new Lookup("Categories", "CategoryId", "CategoryName")).FilterMode(FilterMode.List);
+        productsGrid.Column("UnitPrice").Format("c");
+        productsGrid.Column("Discontinued").DataType(typeof(Boolean));
 
         @productsGrid.Render()
     }
@@ -39,12 +38,12 @@ DbNetGridCore productsGrid = new DbNetGridCore("northwind", "Products")
     PageSize = 10,
     BooleanDisplayMode = BooleanDisplayMode.Checkbox,
 };
-productsGrid.SetColumnFilter(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" });
-productsGrid.SetColumnLookup("SupplierID", new Lookup("Suppliers", "SupplierId", "CompanyName"));
-productsGrid.SetColumnLookup("CategoryID", new Lookup("Categories", "CategoryId", "CategoryName"));
-productsGrid.SetColumnFormat("UnitPrice", "c");
-productsGrid.SetColumnFilterMode("CategoryID", FilterMode.List);
-productsGrid.SetColumnDataType("Discontinued", typeof(Boolean));
+productsGrid.Column(new String[] { "ProductID", "ProductName", "SupplierID", "CategoryID", "QuantityPerUnit", "UnitPrice", "UnitsInStock", "UnitsOnOrder", "ReorderLevel", "Discontinued" }).Filter();
+productsGrid.Column("SupplierID").Lookup(new Lookup("Suppliers", "SupplierId", "CompanyName"));
+productsGrid.Column("CategoryID").Lookup(new Lookup("Categories", "CategoryId", "CategoryName"));
+productsGrid.Column("UnitPrice").Format("c");
+productsGrid.Column("CategoryID").FilterMode(FilterMode.List);
+productsGrid.Column("Discontinued").DataType(typeof(Boolean));
 
 @@productsGrid.Render()
     }

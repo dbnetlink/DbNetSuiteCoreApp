@@ -16,7 +16,7 @@
         customersGrid.Columns = new List<string>() { "CompanyName", "Address","City", "Country", "Phone","Fax", "' ' as Orders", "CustomerId" };
         customersGrid.RowSelect = false;
         customersGrid.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone","Fax"," "," " };
-        customersGrid.SetColumnDataOnly("CustomerId");
+        customersGrid.Column("CustomerId").DataOnly();
         customersGrid.Bind(EventType.OnCellTransform, "addButton");
         @customersGrid.Render()
     }
@@ -24,10 +24,10 @@
 
 @section Source {
 DbNetGridCore customersGrid = new DbNetGridCore("northwind", "customers");
-customersGrid.Columns = new List<string>() { "CompanyName", "Address", "City", "Country", "Phone", "Fax", "' ' as Orders", "CustomerId" };
+customersGrid.Columns = new List<string>() { "CompanyName", "Address","City", "Country", "Phone","Fax", "' ' as Orders", "CustomerId" };
 customersGrid.RowSelect = false;
-customersGrid.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone", "Fax", " ", " " };
-customersGrid.SetColumnDataOnly("CustomerId");
+customersGrid.Labels = new List<string>() { "Company Name", "Address", "City", "Country", "Phone","Fax"," "," " };
+customersGrid.Column("CustomerId").DataOnly();
 customersGrid.Bind(EventType.OnCellTransform, "addButton");
 @@customersGrid.Render()
 }

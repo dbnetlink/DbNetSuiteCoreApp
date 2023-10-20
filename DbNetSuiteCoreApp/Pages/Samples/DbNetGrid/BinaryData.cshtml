@@ -33,7 +33,7 @@
         employeesGrid.PageSize = 5;
         employeesGrid.MaxImageHeight = 40;
         employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
-        employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
+        employeesGrid.Column("Photo").Image( new ImageConfiguration("jpg"));
         @employeesGrid.Render()
 
         DbNetGridCore downloadGrid = new DbNetGridCore("northwind", "employees", "downloadGrid")
@@ -41,9 +41,9 @@
             Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
             PageSize = 5
         };
-        downloadGrid.SetColumnHidden("EmployeeId");
+        downloadGrid.Column("EmployeeId").Hidden();
         downloadGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
-        downloadGrid.SetColumnAsFile("Photo", new FileConfiguration("jpg"));
+        downloadGrid.Column("Photo").File(new FileConfiguration("jpg"));
         @downloadGrid.Render()
     }
 }
@@ -57,9 +57,8 @@ DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees", "image
 employeesGrid.View = true;
 employeesGrid.PageSize = 5;
 employeesGrid.MaxImageHeight = 40;
-employeesGrid.Bind(DbNetGridEnums.EventType.OnConfigureBinaryData, "configureImageFileName");
-employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
-
+employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+employeesGrid.Column("Photo").Image( new ImageConfiguration("jpg"));
 @@employeesGrid.Render()
 
 DbNetGridCore downloadGrid = new DbNetGridCore("northwind", "employees", "downloadGrid")
@@ -67,8 +66,9 @@ DbNetGridCore downloadGrid = new DbNetGridCore("northwind", "employees", "downlo
     Columns = new List<string>() { "EmployeeId", "FirstName", "LastName", "Title", "Photo", "PhotoPath" },
     PageSize = 5
 };
-downloadGrid.SetColumnHidden("EmployeeId");
-downloadGrid.SetColumnAsFile("Photo", new FileConfiguration("jpg"));
+downloadGrid.Column("EmployeeId").Hidden();
+downloadGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
+downloadGrid.Column("Photo").File(new FileConfiguration("jpg"));
 @@downloadGrid.Render()
 }
 

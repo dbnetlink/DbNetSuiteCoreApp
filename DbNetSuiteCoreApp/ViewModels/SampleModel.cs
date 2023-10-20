@@ -12,12 +12,12 @@ using System.Globalization;
 using System.Threading;
 using DbNetSuiteCore.Utilities;
 using Microsoft.AspNetCore.Html;
-using DbNetSuiteCoreApp.Pages.Samples.DbNetGrid;
 using DbNetSuiteCoreApp.Enums;
 using System;
 using Microsoft.AspNetCore.Routing;
 using System.IO;
 using DbNetSuiteCoreApp.Pages.Samples.DbNetGrid;
+
 
 namespace DbNetSuiteCoreApp.ViewModels
 {
@@ -252,7 +252,6 @@ namespace DbNetSuiteCoreApp.ViewModels
 
                 new SampleApp("browsedb", "Browse a database")
             };
-
             return samples;
         }
 
@@ -260,14 +259,14 @@ namespace DbNetSuiteCoreApp.ViewModels
         {
             List<SampleApp> samples = new List<SampleApp>
             {
-                new SampleApp("simplecombo", "Simple", Components.DbNetCombo),
-                new SampleApp("filtered", "Filtered", Components.DbNetCombo),
-                new SampleApp("linked", "Linked", Components.DbNetCombo),
-                new SampleApp("multiple", "Size/Multiple", Components.DbNetCombo),
-                new SampleApp("linkedgrid", "Linked Grid", Components.DbNetCombo),
-                new SampleApp("datacolumns", "Data Columns", Components.DbNetCombo),
-                new SampleApp("distinct", "Distinct", Components.DbNetCombo),
-                new SampleApp("linkededit", "Linked Edit", Components.DbNetCombo)
+                new DbNetComboSampleApp("simplecombo", "Simple"),
+                new DbNetComboSampleApp("filtered", "Filtered"),
+                new DbNetComboSampleApp("linked", "Linked"),
+                new DbNetComboSampleApp("multiple", "Size/Multiple"),
+                new DbNetComboSampleApp("linkedgrid", "Linked Grid"),
+                new DbNetComboSampleApp("datacolumns", "Data Columns"),
+                new DbNetComboSampleApp("distinct", "Distinct"),
+                new DbNetComboSampleApp("linkededit", "Linked Edit")
            };
 
             return samples;
@@ -277,15 +276,20 @@ namespace DbNetSuiteCoreApp.ViewModels
         {
             List<SampleApp> samples = new List<SampleApp>
             {
-                new SampleApp("simple", "Simple", Components.DbNetEdit),
-                new SampleApp("columns", "Columns", Components.DbNetEdit),
-                new SampleApp("layout", "Layout", Components.DbNetEdit),
-                new SampleApp("browse", "Browse", Components.DbNetEdit),
-                new SampleApp("fixedfilter", "Pre-filtering the dataset", Components.DbNetEdit),
-                new SampleApp("toolbarPosition", "Positioning/Styling Toolbar"),
-                new SampleApp("quicksearch", "Quick Search"),
-                new SampleApp("linkededits", "Linked Forms", Components.DbNetEdit)
-           };
+                new DbNetEditSampleApp("simple", "Simple"),
+                new DbNetEditSampleApp("columns", "Columns"),
+                new DbNetEditSampleApp("layout", "Layout"),
+                new DbNetEditSampleApp("browse", "Browse"),
+                new DbNetEditSampleApp("fixedfilter", "Pre-filtering the dataset"),
+                new DbNetEditSampleApp("toolbarPosition", "Positioning/Styling Toolbar"),
+                new DbNetEditSampleApp("quicksearch", "Quick Search"),
+                new DbNetEditSampleApp("linkededits", "Linked Forms"),
+                new DbNetEditSampleApp("linkedgrid", "Linked Grid"),
+                new DbNetEditSampleApp("binarydata", "Uploading files"),
+                new DbNetEditSampleApp("dependentlookup", "Dependent lookups"),
+                new DbNetEditSampleApp("products", "Conditional configuration"),
+                new DbNetEditSampleApp("controltypes", "Control Types")
+         };
 
             return samples;
         }
@@ -359,6 +363,19 @@ namespace DbNetSuiteCoreApp.ViewModels
             Component = component;
             Page = page;
             Title = title;
+        }
+    
+    }
+    public class DbNetEditSampleApp : SampleApp
+    {
+        public DbNetEditSampleApp(string page, string title) : base(page, title, Components.DbNetEdit)
+        {
+        }
+    }
+    public class DbNetComboSampleApp : SampleApp
+    {
+        public DbNetComboSampleApp(string page, string title) : base(page, title, Components.DbNetCombo)
+        {
         }
     }
 }

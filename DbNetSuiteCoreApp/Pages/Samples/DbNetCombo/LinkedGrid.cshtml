@@ -38,14 +38,14 @@
 
         employeesGrid.Columns = new List<string>() { "lastname", "firstname", "Title", "TitleOfCourtesy", "BirthDate", "HireDate", "Address", "City", "Region", "PostalCode", "Country", "HomePhone", "Extension", "photo", "notes", "reportsto", "photopath", "employees.EmployeeID", "territoryid" };
 
-        employeesGrid.SetColumnLookup("reportsto", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-        employeesGrid.SetColumnLookup("TerritoryId", new Lookup("territories", "TerritoryId", "territorydescription"));
-        employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
-        employeesGrid.SetColumnHidden(new String[] { "photo", "notes", "photopath" });
-        employeesGrid.SetColumnView(new String[] { "firstname", "lastname", "photo", "notes", "photopath" });
+        employeesGrid.Column("reportsto").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+        employeesGrid.Column("TerritoryId").Lookup(new Lookup("territories", "TerritoryId", "territorydescription"));
+        employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
+        employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).Hidden();
+        employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
         employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
-        employeesGrid.SetColumnAsForeignKey("TerritoryId");
-        employeesGrid.SetColumnAsGroupHeader(new String[] { "TerritoryId" });
+        employeesGrid.Column("TerritoryId").ForeignKey();
+        employeesGrid.Column("TerritoryId").GroupHeader();
 
         DbNetComboCore territoriesCombo = new DbNetComboCore("northwind", "territories", "territoryid", "territorydescription", "territories") { ForeignKeyColumn = "regionid", Size = 10, MultipleSelect = true, AutoRowSelect = true };
         DbNetComboCore regionsCombo = new DbNetComboCore("northwind", "regions", "regionid", "regiondescription", "regions") { Size = 10, MultipleSelect = true, AutoRowSelect = true };
@@ -58,17 +58,16 @@
 @section Source {
 DbNetGridCore employeesGrid = new DbNetGridCore("northwind", "employees join employeeterritories on employees.employeeid = employeeterritories.employeeid", "employees") { View = true };
 
-employeesGrid.Columns = new List<string>
-() { "lastname", "firstname", "Title", "TitleOfCourtesy", "BirthDate", "HireDate", "Address", "City", "Region", "PostalCode", "Country", "HomePhone", "Extension", "photo", "notes", "reportsto", "photopath", "employees.EmployeeID", "territoryid" };
+employeesGrid.Columns = new List<string>() { "lastname", "firstname", "Title", "TitleOfCourtesy", "BirthDate", "HireDate", "Address", "City", "Region", "PostalCode", "Country", "HomePhone", "Extension", "photo", "notes", "reportsto", "photopath", "employees.EmployeeID", "territoryid" };
 
-employeesGrid.SetColumnLookup("reportsto", new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
-employeesGrid.SetColumnLookup("TerritoryId", new Lookup("territories", "TerritoryId", "territorydescription"));
-employeesGrid.SetColumnAsImage("Photo", new ImageConfiguration("jpg"));
-employeesGrid.SetColumnHidden(new String[] { "photo", "notes", "photopath" });
-employeesGrid.SetColumnView(new String[] { "firstname", "lastname", "photo", "notes", "photopath" });
+employeesGrid.Column("reportsto").Lookup(new Lookup("Employees", "EmployeeId", "lastname + ',' + firstname"));
+employeesGrid.Column("TerritoryId").Lookup(new Lookup("territories", "TerritoryId", "territorydescription"));
+employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
+employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).Hidden();
+employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
 employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
-employeesGrid.SetColumnAsForeignKey("TerritoryId");
-employeesGrid.SetColumnAsGroupHeader(new String[] { "TerritoryId" });
+employeesGrid.Column("TerritoryId").ForeignKey();
+employeesGrid.Column("TerritoryId").GroupHeader();
 
 DbNetComboCore territoriesCombo = new DbNetComboCore("northwind", "territories", "territoryid", "territorydescription", "territories") { ForeignKeyColumn = "regionid", Size = 10, MultipleSelect = true, AutoRowSelect = true };
 DbNetComboCore regionsCombo = new DbNetComboCore("northwind", "regions", "regionid", "regiondescription", "regions") { Size = 10, MultipleSelect = true, AutoRowSelect = true };
