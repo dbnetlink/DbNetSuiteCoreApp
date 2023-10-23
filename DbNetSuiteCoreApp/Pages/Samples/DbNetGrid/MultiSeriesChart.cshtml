@@ -71,12 +71,10 @@ productSalesByCategoryGrid.GroupBy = true;
 
 for (int month = 1; month &lt;= 12; month++)
 {
-    productSalesByCategoryGrid.SetColumnFormat($"period{month.ToString("00")}", "c");
-    productSalesByCategoryGrid.SetColumnDataType($"period{month.ToString("00")}", typeof(Decimal));
-    productSalesByCategoryGrid.SetColumnAggregate($"period{month.ToString("00")}", AggregateType.Sum);
+    productSalesByCategoryGrid.Column($"period{month.ToString("00")}").Format("c").DataType(typeof(Decimal)).Aggregate(AggregateType.Sum);
 }
 
-productSalesByCategoryGrid.SetColumnLookup("CategoryId", new Lookup("Categories", "CategoryId", "CategoryName"));
+productSalesByCategoryGrid.Column("CategoryId").Lookup(new Lookup("Categories", "CategoryId", "CategoryName"));
 productSalesByCategoryGrid.GoogleChartOptions = new GoogleChartOptions() { Type = GoogleChartType.LineChart, PanelId = "chartarea", FunctionName = "chartOptions" };
 @@productSalesByCategoryGrid.Render()
 }

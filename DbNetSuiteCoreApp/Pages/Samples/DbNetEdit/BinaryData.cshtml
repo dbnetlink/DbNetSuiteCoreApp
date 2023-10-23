@@ -7,7 +7,7 @@
 @model SampleModel
 
 @section Title {
-    <p>Binary data can be treated in one of two ways in the form control. If it is an image then it can be previewed directly in the browser by setting the column @Model.HelpLink("methods.htm#Image", "Image") property to true or if the binary data should be downloaded in the case of files such as spreadsheets or PDF's then you can set the column @Model.HelpLink("methods.htm#SetColumnAsImage", "SetColumnAsImage") method. In this sample the ImageConfiguration model is used to automatically associate uploaded file meta-data with columns in the form and the @Model.HelpLink("events.htm#OnFileSelected", "OnFileSelected") event is used to set the description column of the record based on the name of the uploaded file.</p>
+    <p>Binary data can be treated in one of two ways in the form control. If it is an image then it can be previewed directly in the browser by setting the column @Model.HelpLink("dbnetedit_column_properties.htm#Image", "Image") property to true or if the binary data should be downloaded in the case of files such as spreadsheets or PDF's then you can set the column @Model.HelpLink("dbnetedit_column_properties.htm#File", "File") method. In this sample the @Model.HelpLink("ImageConfiguration.htm", "ImageConfiguration") class is used to automatically associate uploaded file meta-data with columns in the form and the @Model.HelpLink("dbnetedit_events.htm#OnFileSelected", "OnFileSelected") event is used to set the description column of the record based on the name of the uploaded file.</p>
 }
 
 

@@ -6,7 +6,7 @@
 @model SampleModel
 
 @section Title {
-    <p>An expanded view of the currently selected record can be achieved by using the @Model.HelpLink("properties.htm#View", "View") property to make a view dialog available from the toolbar. The columns that appear in the dialog can be controlled by setting the column @Model.HelpLink("methods.htm#View", "View") property to true. The example also uses the @Model.HelpLink("methods.htm#View", "OnViewRecordSelected") event to set the title of the View dialog for the record being displayed</p>
+    <p>An expanded view of the currently selected record can be achieved by using the @Model.HelpLink("properties.htm#View", "View") property to make a view dialog available from the toolbar. The columns that appear in the dialog can be controlled by setting the column @Model.HelpLink("methods.htm#View", "View") property to true. The example also uses the @Model.HelpLink("methods.htm#View", "OnViewRecordSelected") event to set the title of the View dialog for the record being displayed and to set the size of the notes element (using the client-side @Model.HelpLink("clientsideapi.htm#viewElement", "viewElement") method).</p>
 }
 
 @section Control {
@@ -19,7 +19,7 @@
         employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
         employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).DataOnly();
         employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
-        employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
+        employeesGrid.Bind(EventType.OnViewRecordSelected, "configureViewDialog");
         employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
 
         @employeesGrid.Render()
@@ -35,7 +35,7 @@ employeesGrid.Column("reportsto").Lookup(new Lookup("Employees", "EmployeeId", "
 employeesGrid.Column("Photo").Image(new ImageConfiguration("jpg"));
 employeesGrid.Column(new String[] { "photo", "notes", "photopath" }).DataOnly();
 employeesGrid.Column(new String[] { "firstname", "lastname", "photo", "notes", "photopath" }).View();
-employeesGrid.Bind(EventType.OnViewRecordSelected, "updateTitle");
+employeesGrid.Bind(EventType.OnViewRecordSelected, "configureViewDialog");
 employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
 
 @@employeesGrid.Render()
@@ -43,8 +43,9 @@ employeesGrid.Bind(EventType.OnConfigureBinaryData, "configureImageFileName");
 
 @section Scripts {
     <script type="text/javascript" class="source">
-        function updateTitle(sender, args) {
+        function configureViewDialog(sender, args) {
             args.dialog.dialog("option", "title", args.record["firstname"] + " " + args.record["lastname"]);
+            $(sender.viewElement("notes")).width(200).height(100).css("overflow", "auto");
         }
 
         function configureImageFileName(sender, args) {
