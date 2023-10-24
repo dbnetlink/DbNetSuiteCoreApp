@@ -17,7 +17,7 @@ using System;
 using Microsoft.AspNetCore.Routing;
 using System.IO;
 using DbNetSuiteCoreApp.Pages.Samples.DbNetGrid;
-
+using DbNetSuiteCoreApp.Pages.Samples;
 
 namespace DbNetSuiteCoreApp.ViewModels
 {
@@ -30,7 +30,6 @@ namespace DbNetSuiteCoreApp.ViewModels
         {
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
-            PopulateSamples();
         }
 
         public Dictionary<Components, List<SampleApp>> Samples { get; set; } = new Dictionary<Components, List<SampleApp>>();
@@ -60,7 +59,7 @@ namespace DbNetSuiteCoreApp.ViewModels
         public string Culture { get; set; } = null;
         public string CustomerId { get; set; } = null;
         public int? OrderId { get; set; } = null;
-
+        public bool ShowMenu { get; set; } = false;
 
         public void OnGet(
             string fontFamily = "verdana",
@@ -96,6 +95,17 @@ namespace DbNetSuiteCoreApp.ViewModels
                 GetCultures();
             }
 
+            PopulateSamples();
+
+            if (this is MenuModel)
+            {
+                ShowMenu = true;
+            }
+            else
+            {
+                SampleNavigation();
+            }
+
             if (toolbarButtonStyle.HasValue)
             {
                 ToolbarButtonStyle = toolbarButtonStyle.Value;
@@ -112,7 +122,6 @@ namespace DbNetSuiteCoreApp.ViewModels
             CustomerId = customerId;
             OrderId = orderId;
 
-            BuildMenu();
             try
             {
                 GetSourceCode();
@@ -123,7 +132,7 @@ namespace DbNetSuiteCoreApp.ViewModels
             }
         }
 
-        private void BuildMenu()
+        private void SampleNavigation()
         {
             var segments = HttpContext.Request.Path.ToString().Split("/");
             Component = (Components)Enum.Parse(typeof(Components), segments[^2], true);
@@ -139,7 +148,9 @@ namespace DbNetSuiteCoreApp.ViewModels
             SampleApp = samples.FirstOrDefault(s => s.Url.ToLower() == PageName.ToLower());
             SampleApp ??= samples.First();
 
-            var sampleIndex = samples.IndexOf(SampleApp);
+            Title = $"{SampleApp.Component} - {SampleApp.Title}";
+
+            int sampleIndex = samples.FindIndex(app => app.Url.Equals(SampleApp.Url, StringComparison.Ordinal));
             PreviousSampleApp = (sampleIndex > 0) ? samples[sampleIndex - 1] : samples.Last();
             NextSampleApp = (sampleIndex < samples.Count - 1) ? samples[sampleIndex + 1] : samples.First();
         }
